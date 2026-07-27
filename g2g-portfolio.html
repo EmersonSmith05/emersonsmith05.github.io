@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G2G Portfolio Intelligence — demo</title>
+<meta name="description" content="Demo of the G2G Portfolio Intelligence platform built during a Steward Partners G2G wealth management internship. Synthetic model portfolio; simulated Bloomberg feed.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d2c1d'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='22' font-weight='bold' fill='%23e8f0ea' text-anchor='middle'%3EG%3Ctspan fill='%23d4b96b'%3E2%3C/tspan%3EG%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --brand-950:#081f14; --brand-900:#0d2c1d; --brand-800:#16432e; --brand-700:#1d563b;
+  --brand-600:#27704a; --brand-500:#35875c; --brand-100:#e2ede5; --brand-50:#eef4ef;
+  --gold-600:#a9883a; --gold-500:#c2a14d; --gold-400:#d4b96b; --gold-100:#f6efdc;
+  --ink:#182430; --muted:#5f6e7b; --line:#dfe4e2; --surface:#ffffff; --surface-2:#f4f6f4; --page:#edf0ec;
+  --pos:#17663c; --neg:#a02c23; --warn:#8a5a00; --info:#1d4470;
+  --serif:Georgia,'Times New Roman',serif; --sans:'Segoe UI',system-ui,sans-serif;
+  --r1:6px; --r2:10px;
+  --shadow:0 1px 2px rgba(8,31,20,.07), 0 4px 14px rgba(8,31,20,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--sans);font-size:14px;background:var(--page);color:var(--ink)}
+button{font-family:inherit}
+a{color:var(--brand-700)}
+.hidden{display:none !important}
+
+#demoBar{background:var(--brand-950);color:#cfe0d5;font-size:12.5px;padding:7px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+#demoBar a{color:#fff;font-weight:700;text-decoration:none;white-space:nowrap}
+#demoBar .note{opacity:.85}
+
+.shell{display:flex;min-height:calc(100vh - 34px)}
+.sidebar{width:230px;flex:0 0 230px;background:linear-gradient(180deg,var(--brand-950) 0%,var(--brand-900) 100%);color:#d7e4da;position:sticky;top:0;height:calc(100vh - 34px);display:flex;flex-direction:column;overflow-y:auto}
+.lockup{padding:20px 16px 14px;text-align:center;border-bottom:1px solid rgba(255,255,255,.09)}
+.lockup .mono{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:1px;color:#e8f0ea}
+.lockup .mono .two{color:var(--gold-400)}
+.lockup .wm{font-size:10.5px;letter-spacing:3.2px;color:#b9cdbf;margin-top:2px}
+.lockup .at{display:flex;align-items:center;gap:8px;justify-content:center;margin-top:8px}
+.lockup .at::before,.lockup .at::after{content:"";height:1px;width:26px;background:var(--gold-600)}
+.lockup .at span{font-size:8.5px;letter-spacing:2.4px;color:var(--gold-400)}
+.lockup .tag{font-size:8.5px;letter-spacing:2px;color:#8faf98;margin-top:8px;font-style:italic}
+.sb-sec{font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold-400);padding:16px 16px 6px}
+.sb-link{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:#c6d6ca;border-left:3px solid transparent;cursor:pointer;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
+.sb-link:hover{background:rgba(255,255,255,.05)}
+.sb-link.active{border-left-color:var(--gold-500);color:#fff;background:rgba(255,255,255,.08)}
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{background:var(--surface);border-bottom:1px solid var(--line);padding:12px 24px;display:flex;align-items:center;gap:12px}
+.crumb{font-size:13.5px;color:var(--muted)}
+.crumb b{color:var(--ink)}
+.topbar .out{margin-left:auto}
+.btn{background:var(--brand-800);color:#fff;border:1px solid var(--brand-800);padding:8px 14px;border-radius:var(--r1);font-size:13.5px;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--brand-700)}
+.btn2{background:var(--surface);color:var(--brand-800);border:1px solid var(--brand-700);padding:8px 14px;border-radius:var(--r1);font-size:13.5px;font-weight:600;cursor:pointer}
+.btn-gold{background:var(--gold-600);border-color:var(--gold-600);color:#fff;padding:8px 14px;border-radius:var(--r1);font-size:13.5px;font-weight:600;cursor:pointer;border-style:solid;border-width:1px}
+.content{padding:24px;max-width:1180px}
+.page-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--brand-900)}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);box-shadow:var(--shadow);padding:22px;margin-top:16px}
+.sec-title{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--brand-900);border-left:3px solid var(--gold-500);padding-left:12px;margin-bottom:14px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--gold-500);border-radius:var(--r1);padding:14px 16px;box-shadow:var(--shadow)}
+.kpi .l{font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.kpi .v{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--brand-900);margin-top:4px;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:11.5px;margin-top:2px}
+table.data{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+table.data th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);background:var(--surface-2);text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+table.data td{padding:9px 10px;border-bottom:1px solid var(--line);font-size:13.5px}
+table.data tbody tr:nth-child(even){background:rgba(22,67,46,.025)}
+table.data tbody tr:hover{background:var(--brand-50)}
+table.data tfoot td{border-top:2px solid var(--line);font-weight:700;border-bottom:none}
+.num{text-align:right} th.num{text-align:right}
+.pos{color:var(--pos)} .neg{color:var(--neg)} .na{color:#9aa5ae}
+.badge{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+.badge-green{background:#e0efe4;color:var(--pos)}
+.badge-gold{background:var(--gold-100);color:var(--warn)}
+.badge-red{background:#f7e2df;color:var(--neg)}
+.badge-blue{background:#e3ebf5;color:var(--info)}
+.badge-gray{background:#e8ebe9;color:#55606a}
+.badge-solid{background:var(--brand-700);color:#fff}
+.note-banner{background:var(--gold-100);color:var(--warn);border:1px solid var(--gold-400);border-radius:var(--r1);padding:10px 14px;font-size:13px;margin-bottom:14px}
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.chart-block{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r2);padding:16px}
+.chart-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px}
+.legend{list-style:none;margin-top:10px}
+.legend li{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:2.5px 0}
+.legend .dot{width:9px;height:9px;border-radius:50%;flex:0 0 9px}
+.inline-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:14px}
+.inline-form label{display:block;font-size:11.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.inline-form input,.inline-form select{padding:8px 10px;border:1px solid var(--line);border-radius:var(--r1);font-size:13.5px;font-family:inherit;background:var(--surface)}
+.inline-form input:focus,.inline-form select:focus{outline:2px solid var(--gold-500);outline-offset:1px}
+.dcf-grid{display:grid;grid-template-columns:290px 1fr;gap:18px}
+@media(max-width:900px){
+  .dcf-grid{grid-template-columns:1fr}
+  .shell{flex-direction:column}
+  .sidebar{width:100%;flex:none;height:auto;position:static;flex-direction:row;align-items:center;overflow-x:auto;padding:0 8px}
+  .lockup{border-bottom:none;padding:8px 12px;text-align:left}
+  .lockup .mono{font-size:18px}
+  .lockup .wm,.lockup .at,.lockup .tag{display:none}
+  .sb-sec{display:none}
+  .sb-link{width:auto;white-space:nowrap;border-left:none;border-bottom:3px solid transparent;padding:12px 10px}
+  .sb-link.active{border-bottom-color:var(--gold-500)}
+}
+.dcf-inputs{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r2);padding:18px}
+.dcf-inputs .row{margin-bottom:12px}
+.dcf-inputs label{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;color:var(--muted);margin-bottom:4px}
+.dcf-inputs label output{color:var(--brand-800)}
+.dcf-inputs input[type=range]{width:100%;accent-color:var(--brand-700)}
+.verdict{border-radius:var(--r2);padding:18px;text-align:center;margin-bottom:14px}
+.verdict .fv{font-family:var(--serif);font-size:34px;font-weight:700}
+.verdict .vs{font-size:13px;margin-top:4px}
+.cell-green{background:#e0efe4;color:var(--pos)}
+.cell-yellow{background:var(--gold-100);color:var(--warn)}
+.cell-red{background:#f7e2df;color:var(--neg)}
+.mini-note{font-size:12px;color:var(--muted);margin-top:10px}
+.toast-stack{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:8px;z-index:99}
+.toast{background:var(--brand-900);color:#fff;padding:10px 16px;border-radius:var(--r1);font-size:13px;box-shadow:var(--shadow);animation:tin .25s}
+@keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+input.wt{width:88px;text-align:right;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r1);font-size:13.5px}
+.total-ok{color:var(--pos)} .total-off{color:var(--neg)}
+</style>
+</head>
+<body>
+
+<div id="demoBar">
+  <a href="index.html">&larr; Back to Emerson's resume</a>
+  <span class="note">Demo of the platform I built during my Steward Partners G2G internship — the model portfolio shown is synthetic, not the firm's actual book. Bloomberg feed is simulated.</span>
+</div>
+
+<div class="shell">
+  <div class="sidebar">
+    <div class="lockup">
+      <div class="mono">G<span class="two">2</span>G</div>
+      <div class="wm">WEALTH&nbsp;MANAGEMENT</div>
+      <div class="at"><span>AT STEWARD PARTNERS</span></div>
+      <div class="tag">GENERATION TO GENERATION</div>
+    </div>
+    <div class="sb-sec">Analyze</div>
+    <button class="sb-link" data-p="dashboard" onclick="go('dashboard')">Dashboard</button>
+    <button class="sb-link" data-p="screener" onclick="go('screener')">Screener</button>
+    <button class="sb-link" data-p="dcf" onclick="go('dcf')">DCF Valuation</button>
+    <button class="sb-link" data-p="stress" onclick="go('stress')">Stress Test</button>
+    <div class="sb-sec">Manage</div>
+    <button class="sb-link" data-p="rebalance" onclick="go('rebalance')">Rebalance</button>
+    <button class="sb-link" data-p="imports" onclick="go('imports')">Data Imports</button>
+    <div class="sb-sec">System</div>
+    <button class="sb-link" data-p="bloomberg" onclick="go('bloomberg')">Bloomberg</button>
+    <button class="sb-link" data-p="audit" onclick="go('audit')">Audit</button>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb">G2G Portfolio Intelligence&nbsp;/&nbsp;<b id="crumbPage">Dashboard</b></div>
+      <div class="out"><a class="btn2" style="text-decoration:none" href="index.html">Sign out</a></div>
+    </div>
+    <div class="content" id="content"></div>
+  </div>
+</div>
+<div class="toast-stack" id="toasts"></div>
+
+<script>
+"use strict";
+/* ===== synthetic model portfolio (income & quality tilt — NOT the firm's actual book) ===== */
+const H = [
+  {t:"MSFT", n:"Microsoft Corp",        sec:"Technology",   w:9.0, px:452.10, pe:34.6, fpe:29.5, peg:2.1, roic:28.4, wacc:8.9,  dy:0.7, beta:0.95, vol:22.1, g:14.2, fcf:95.0,  sh:7.43, nd:-40},
+  {t:"AAPL", n:"Apple Inc",             sec:"Technology",   w:8.0, px:228.41, pe:31.2, fpe:27.8, peg:3.5, roic:56.7, wacc:9.1,  dy:0.4, beta:1.18, vol:24.8, g:9.0,  fcf:140.0, sh:15.12, nd:52},
+  {t:"AVGO", n:"Broadcom Inc",          sec:"Technology",   w:6.0, px:172.55, pe:36.9, fpe:27.2, peg:1.6, roic:17.8, wacc:9.4,  dy:1.3, beta:1.24, vol:31.5, g:22.8, fcf:21.9,  sh:4.66, nd:58},
+  {t:"JPM",  n:"JPMorgan Chase & Co",   sec:"Financials",   w:7.5, px:244.72, pe:13.4, fpe:14.1, peg:3.3, roic:0,    wacc:0,    dy:2.0, beta:1.06, vol:23.9, g:4.1,  fcf:0,     sh:2.87, nd:0},
+  {t:"V",    n:"Visa Inc",              sec:"Financials",   w:6.0, px:311.24, pe:31.5, fpe:26.9, peg:2.5, roic:25.6, wacc:8.4,  dy:0.7, beta:0.94, vol:19.6, g:12.6, fcf:19.7,  sh:1.98, nd:8},
+  {t:"UNH",  n:"UnitedHealth Group",    sec:"Health Care",  w:7.0, px:524.60, pe:19.1, fpe:16.2, peg:1.6, roic:15.9, wacc:7.8,  dy:1.6, beta:0.55, vol:21.7, g:11.9, fcf:18.0,  sh:0.92, nd:47},
+  {t:"ABBV", n:"AbbVie Inc",            sec:"Health Care",  w:6.0, px:186.05, pe:15.6, fpe:14.2, peg:2.2, roic:13.1, wacc:7.6,  dy:3.4, beta:0.61, vol:20.3, g:7.0,  fcf:17.0,  sh:1.77, nd:60},
+  {t:"XOM",  n:"Exxon Mobil Corp",      sec:"Energy",       w:6.5, px:117.94, pe:13.8, fpe:13.0, peg:3.5, roic:11.2, wacc:8.2,  dy:3.3, beta:0.88, vol:26.4, g:3.9,  fcf:34.4,  sh:4.33, nd:15},
+  {t:"PG",   n:"Procter & Gamble",      sec:"Staples",      w:6.5, px:169.22, pe:26.4, fpe:24.3, peg:3.9, roic:16.8, wacc:6.9,  dy:2.4, beta:0.42, vol:15.8, g:6.7,  fcf:16.8,  sh:2.36, nd:25},
+  {t:"KO",   n:"Coca-Cola Co",          sec:"Staples",      w:5.5, px:63.48,  pe:26.0, fpe:22.1, peg:4.2, roic:14.9, wacc:6.7,  dy:3.1, beta:0.59, vol:14.9, g:6.2,  fcf:9.8,   sh:4.31, nd:23},
+  {t:"HON",  n:"Honeywell Intl",        sec:"Industrials",  w:6.0, px:224.30, pe:25.5, fpe:20.9, peg:2.5, roic:14.2, wacc:8.0,  dy:2.0, beta:1.00, vol:20.9, g:8.4,  fcf:5.3,   sh:0.65, nd:19},
+  {t:"UNP",  n:"Union Pacific Corp",    sec:"Industrials",  w:5.0, px:244.19, pe:21.6, fpe:19.8, peg:2.6, roic:15.6, wacc:7.7,  dy:2.2, beta:1.05, vol:22.6, g:8.3,  fcf:6.0,   sh:0.60, nd:31},
+  {t:"NEE",  n:"NextEra Energy",        sec:"Utilities",    w:5.5, px:71.58,  pe:20.8, fpe:19.2, peg:2.6, roic:5.9,  wacc:6.4,  dy:2.9, beta:0.60, vol:22.4, g:8.0,  fcf:-2.1,  sh:2.06, nd:78},
+  {t:"O",    n:"Realty Income Corp",    sec:"Real Estate",  w:4.5, px:58.90,  pe:41.1, fpe:37.6, peg:8.2, roic:3.4,  wacc:6.6,  dy:5.4, beta:0.82, vol:19.2, g:5.0,  fcf:3.1,   sh:0.87, nd:26},
+  {t:"LIN",  n:"Linde plc",             sec:"Materials",    w:5.0, px:437.16, pe:31.9, fpe:26.4, peg:3.4, roic:13.6, wacc:7.9,  dy:1.3, beta:0.91, vol:18.7, g:9.4,  fcf:7.7,   sh:0.48, nd:17},
+  {t:"TGT",  n:"Target Corp",           sec:"Discretionary",w:4.0, px:132.75, pe:14.1, fpe:13.2, peg:2.4, roic:12.5, wacc:8.1,  dy:3.4, beta:1.21, vol:32.6, g:5.8,  fcf:3.6,   sh:0.46, nd:14},
+];
+const CASH = +(100 - H.reduce((s,h)=>s+h.w,0)).toFixed(2);
+const ASOF = "2026-07-24";
+const GOLD_PAL = ["#16432e","#c2a14d","#27704a","#1d4470","#7a5c8f","#9a7b4f","#4a7a8f","#8f5c5c","#5c8a5f","#a9883a"];
+
+function toast(m){ const t=document.createElement("div"); t.className="toast"; t.textContent=m; document.getElementById("toasts").appendChild(t); setTimeout(()=>t.remove(),3500); }
+const fmtPct=(v,d=1)=>(v>=0?"+":"")+v.toFixed(d)+"%";
+const cls=v=>v>=0?"pos":"neg";
+
+function donut(data){
+  const total=data.reduce((s,d)=>s+d.value,0);
+  let a0=-Math.PI/2, paths="", i=0;
+  for(const d of data){
+    const a1=a0+(d.value/total)*2*Math.PI*0.995, large=(a1-a0)>Math.PI?1:0;
+    const R=82,r=52,cx=110,cy=95;
+    const x0=cx+R*Math.cos(a0),y0=cy+R*Math.sin(a0),x1=cx+R*Math.cos(a1),y1=cy+R*Math.sin(a1);
+    const xi=cx+r*Math.cos(a1),yi=cy+r*Math.sin(a1),xj=cx+r*Math.cos(a0),yj=cy+r*Math.sin(a0);
+    const col=d.label==="Cash"?"#9aa5ae":GOLD_PAL[i%GOLD_PAL.length];
+    paths+=`<path d="M${x0} ${y0} A${R} ${R} 0 ${large} 1 ${x1} ${y1} L${xi} ${yi} A${r} ${r} 0 ${large} 0 ${xj} ${yj} Z" fill="${col}" stroke="#fff" stroke-width="2"/>`;
+    a0=a1+0.01;i++;
+  }
+  const leg=data.map((d,j)=>`<li><span class="dot" style="background:${d.label==="Cash"?"#9aa5ae":GOLD_PAL[j%GOLD_PAL.length]}"></span>${d.label} — ${(d.value/total*100).toFixed(1)}%</li>`).join("");
+  return `<svg viewBox="0 0 220 190" style="width:100%;max-width:240px;display:block;margin:0 auto">${paths}</svg><ul class="legend">${leg}</ul>`;
+}
+function seeded(seed){ let s=seed; return ()=>{ s=(s*1103515245+12345)%2147483648; return s/2147483648; }; }
+function series(seed,drift,vol,n){ const r=seeded(seed); let v=100; const o=[v]; for(let i=1;i<n;i++){ v*=1+drift+(r()-0.5)*vol; o.push(v);} return o; }
+const NAV=series(11,0.0020,0.026,48), BM=series(3,0.0018,0.027,48);
+function lineChart(sp,sb){
+  const W=720,H2=250,P=36;
+  const all=sp.concat(sb),mn=Math.min(...all)*0.98,mx=Math.max(...all)*1.02;
+  const X=i=>P+(W-2*P)*i/(sp.length-1), Y=v=>H2-P-(H2-2*P)*(v-mn)/(mx-mn);
+  const pts=s=>s.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+  let grid=""; for(let g=0;g<3;g++){ const y=P+(H2-2*P)*g/2, val=(mx-(mx-mn)*g/2).toFixed(0);
+    grid+=`<line x1="${P}" y1="${y}" x2="${W-P}" y2="${y}" stroke="#dfe4e2" stroke-dasharray="3 4"/><text x="${P-6}" y="${y+4}" font-size="10" fill="#5f6e7b" text-anchor="end">${val}</text>`; }
+  const xt=["Aug '22","Jul '24","Jul '26"].map((m,i)=>`<text x="${P+(W-2*P)*i/2}" y="${H2-10}" font-size="10" fill="#5f6e7b" text-anchor="middle">${m}</text>`).join("");
+  return `<svg viewBox="0 0 ${W} ${H2}" style="width:100%">${grid}${xt}
+    <polyline points="${pts(sb)}" fill="none" stroke="#c2a14d" stroke-width="2" stroke-dasharray="5 3"/>
+    <polyline points="${pts(sp)}" fill="none" stroke="#16432e" stroke-width="2.4"/></svg>
+    <ul class="legend" style="display:flex;gap:20px"><li><span class="dot" style="background:#16432e"></span>Demo Income &amp; Quality Model</li><li><span class="dot" style="background:#c2a14d"></span>S&amp;P 500 (demo series)</li></ul>`;
+}
+
+/* ===== pages ===== */
+const PAGES={
+
+dashboard(){
+  const secMap={}; H.forEach(h=>secMap[h.sec]=(secMap[h.sec]||0)+h.w);
+  const secData=Object.entries(secMap).sort((a,b)=>b[1]-a[1]).map(([label,value])=>({label,value}));
+  secData.push({label:"Cash",value:CASH});
+  const wavg=f=>{let s=0,w=0;H.forEach(h=>{if(h[f]){s+=h[f]*h.w;w+=h.w;}});return w?s/w:0;};
+  const top=[...H].sort((a,b)=>b.w-a.w).slice(0,8)
+    .map(h=>`<tr><td><b>${h.t}</b></td><td>${h.n}</td><td>${h.sec}</td><td class="num">${h.w.toFixed(1)}%</td><td class="num">${h.dy.toFixed(1)}%</td><td class="num">${h.beta.toFixed(2)}</td></tr>`).join("");
+  return `
+  <div class="page-title">Portfolio Dashboard</div>
+  <div class="page-sub">Demo Income &amp; Quality Model · ${H.length} holdings · data as of ${ASOF} · Bloomberg feed simulated</div>
+  <div class="card"><div class="kpis">
+    <div class="kpi"><div class="l">Holdings</div><div class="v">${H.length}</div><div class="s" style="color:var(--muted)">+ ${CASH.toFixed(1)}% cash</div></div>
+    <div class="kpi"><div class="l">Weighted Div Yield</div><div class="v">${wavg("dy").toFixed(2)}%</div><div class="s pos">income tilt</div></div>
+    <div class="kpi"><div class="l">Weighted Beta</div><div class="v">${wavg("beta").toFixed(2)}</div><div class="s" style="color:var(--muted)">vs market 1.00</div></div>
+    <div class="kpi"><div class="l">Weighted P/E</div><div class="v">${wavg("pe").toFixed(1)}</div><div class="s" style="color:var(--muted)">fwd ${wavg("fpe").toFixed(1)}</div></div>
+    <div class="kpi"><div class="l">ROIC − WACC</div><div class="v pos">+${(wavg("roic")-wavg("wacc")).toFixed(1)}%</div><div class="s" style="color:var(--muted)">value creation spread</div></div>
+  </div></div>
+  <div class="card"><div class="sec-title">Growth of $100 — 4 years</div>${lineChart(NAV,BM)}</div>
+  <div class="card"><div class="chart-grid">
+    <div class="chart-block"><div class="chart-title">Sector Mix</div>${donut(secData)}</div>
+    <div class="chart-block"><div class="chart-title">Top Holdings</div>
+      <table class="data"><thead><tr><th>Ticker</th><th>Name</th><th>Sector</th><th class="num">Weight</th><th class="num">Yield</th><th class="num">Beta</th></tr></thead><tbody>${top}</tbody></table>
+    </div>
+  </div></div>`;
+},
+
+screener(){
+  return `
+  <div class="page-title">Research Screener</div>
+  <div class="page-sub">Fundamental screen across the model or any list of companies — valuation, quality spread, income, and risk. Replaces the old side-by-side Bloomberg pulls.</div>
+  <div class="card">
+    <div class="inline-form">
+      <div><label>Universe</label><select id="uniSel" onchange="uniChange()"><option value="model">Current model holdings</option><option value="stocks">Individual companies</option></select></div>
+      <div id="uniTickWrap" class="hidden" style="flex:1;min-width:300px"><label>Tickers</label><input id="uniTickers" style="width:100%" value="AAPL MSFT GOOGL AMZN NVDA META TSLA"></div>
+      <button class="btn" onclick="runG2GScreen(true)">Run screen</button>
+      <button class="btn2" onclick="toast('Excel export generated (demo)')">Export Excel</button>
+    </div>
+    <div id="g2gScrOut"></div>
+  </div>`;
+},
+
+dcf(){
+  const opts=H.filter(h=>h.fcf>0).map(h=>`<option value="${h.t}">${h.t} — ${h.n}</option>`).join("");
+  return `
+  <div class="page-title">DCF Valuation</div>
+  <div class="page-sub">Two-stage free-cash-flow model — the workflow that replaced the PM's DCF spreadsheet. Drag the assumptions; everything recomputes live.</div>
+  <div class="card"><div class="dcf-grid">
+    <div class="dcf-inputs">
+      <div class="row"><label>Company</label>
+        <select id="dcfT" style="width:100%;padding:8px;border:1px solid var(--line);border-radius:6px" onchange="runDcf()">${opts}</select></div>
+      <div class="row"><label>FCF growth, years 1–5 <output id="oG"></output></label>
+        <input type="range" id="inG" min="0" max="25" step="0.5" value="9" oninput="runDcf()"></div>
+      <div class="row"><label>Fade growth, years 6–10 <output id="oF"></output></label>
+        <input type="range" id="inF" min="0" max="15" step="0.5" value="5" oninput="runDcf()"></div>
+      <div class="row"><label>Terminal growth <output id="oTg"></output></label>
+        <input type="range" id="inTg" min="0" max="4" step="0.25" value="2.5" oninput="runDcf()"></div>
+      <div class="row"><label>Discount rate (WACC) <output id="oW"></output></label>
+        <input type="range" id="inW" min="6" max="14" step="0.25" value="9" oninput="runDcf()"></div>
+      <button class="btn2" style="width:100%" onclick="resetDcf()">Reset to company defaults</button>
+      <p class="mini-note">Base FCF, net debt, and share count come from the simulated Bloomberg feed. Defaults load each company's consensus-ish growth and its WACC.</p>
+    </div>
+    <div id="dcfOut"></div>
+  </div></div>`;
+},
+
+stress(){
+  const scen=[
+    {n:"Global Financial Crisis",p:"2007-10 → 2009-03",s:-57},
+    {n:"COVID Crash",p:"2020-02 → 2020-03",s:-34},
+    {n:"Rate-Driven Bear Market",p:"2022-01 → 2022-10",s:-25},
+    {n:"Correction",p:"—",s:-10},
+  ];
+  const wBeta=H.reduce((s,h)=>s+h.beta*h.w,0)/100;
+  const cards=scen.map(sc=>{
+    const est=wBeta*sc.s;
+    const ranked=[...H].sort((a,b)=>a.beta*sc.s-b.beta*sc.s);
+    const mini=l=>l.map(h=>`<tr><td>${h.t}</td><td class="num">${h.w.toFixed(1)}%</td><td class="num ${cls(h.beta*sc.s)}">${fmtPct(h.beta*sc.s)}</td></tr>`).join("");
+    return `<div class="card"><div style="display:flex;gap:10px;align-items:center;margin-bottom:10px">
+      <b style="font-family:var(--serif);font-size:16px;color:var(--brand-900)">${sc.n}</b>
+      <span class="badge badge-gray">${sc.p}</span><span class="badge badge-gold">ESTIMATE</span></div>
+      <div class="kpis">
+        <div class="kpi"><div class="l">Est. Portfolio Return</div><div class="v ${cls(est)}" style="font-size:20px">${fmtPct(est)}</div></div>
+        <div class="kpi"><div class="l">Market Shock</div><div class="v" style="font-size:20px">${sc.s}%</div></div>
+        <div class="kpi"><div class="l">Est. Dollar Impact / $1M</div><div class="v neg" style="font-size:20px">$${Math.round(est*10000).toLocaleString()}</div></div>
+      </div>
+      <div class="chart-grid" style="margin-top:14px">
+        <div><div class="chart-title">Most exposed</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Est.</th></tr></thead><tbody>${mini(ranked.slice(0,4))}</tbody></table></div>
+        <div><div class="chart-title">Most defensive</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Est.</th></tr></thead><tbody>${mini(ranked.slice(-4).reverse())}</tbody></table></div>
+      </div></div>`;
+  }).join("");
+  return `
+  <div class="page-title">Stress Testing</div>
+  <div class="page-sub">Beta-based scenario estimates — replaced the PM's manual stress spreadsheet.</div>
+  <div class="note-banner" style="margin-top:16px">Estimates apply each holding's beta to a hypothetical market shock. They are not predictions; betas come from the simulated data feed.</div>
+  ${cards}`;
+},
+
+rebalance(){
+  const rows=H.map((h,i)=>`<tr><td><b>${h.t}</b></td><td>${h.n}</td>
+    <td class="num">${h.w.toFixed(2)}%</td>
+    <td class="num"><input class="wt" type="number" step="0.5" value="${h.w.toFixed(2)}" data-i="${i}" oninput="rebTotal()"></td>
+    <td class="num" id="drift${i}"></td></tr>`).join("");
+  return `
+  <div class="page-title">Rebalance</div>
+  <div class="page-sub">Edit target weights, check the drift, export the trade list — the fifth Excel workflow this platform absorbed.</div>
+  <div class="card">
+    <div style="overflow-x:auto"><table class="data"><thead><tr><th>Ticker</th><th>Name</th><th class="num">Current</th><th class="num">New Target (%)</th><th class="num">Drift</th></tr></thead>
+    <tbody>${rows}</tbody>
+    <tfoot><tr><td colspan="3">Total</td><td class="num" id="rebTotalCell"></td><td class="num" id="rebCash" style="font-weight:400;font-size:12.5px;color:var(--muted)"></td></tr></tfoot></table></div>
+    <div class="inline-form" style="margin-top:14px">
+      <button class="btn" onclick="tradeList()">Generate trade list</button>
+      <button class="btn2" onclick="toast('Excel export generated (demo)')">Export Excel</button>
+    </div>
+    <div id="tradeOut"></div>
+  </div>`;
+},
+
+imports(){
+  return `
+  <div class="page-title">Data Imports</div>
+  <div class="page-sub">Bring in holdings and price files; Bloomberg fills the fundamentals.</div>
+  <div class="card"><div class="sec-title">Import a holdings file</div>
+    <div class="inline-form"><input type="file" style="font-size:13px">
+      <button class="btn2" onclick="toast('Validation passed — 16 rows recognized (demo)')">Validate</button>
+      <button class="btn" onclick="toast('Import is disabled in the demo environment')">Apply</button></div>
+    <div class="note-banner">Validation writes nothing — it reports exactly what would happen before you apply.</div>
+    <table class="data"><thead><tr><th>When</th><th>Type</th><th>Result</th><th class="num">Records</th><th>By</th></tr></thead><tbody>
+      <tr><td>${ASOF} 08:12</td><td>prices</td><td><span class="badge badge-green">success</span></td><td class="num">1,240</td><td>PM terminal</td></tr>
+      <tr><td>2026-07-21 09:30</td><td>holdings</td><td><span class="badge badge-green">success</span></td><td class="num">16</td><td>PM terminal</td></tr>
+      <tr><td>2026-07-14 09:05</td><td>holdings</td><td><span class="badge badge-red">failed</span></td><td class="num">0</td><td>PM terminal</td></tr>
+    </tbody></table>
+  </div>`;
+},
+
+bloomberg(){
+  return `
+  <div class="page-title">Bloomberg Connection</div>
+  <div class="page-sub">Desktop API (blpapi) status — the platform runs beside the Bloomberg Terminal on the office workstation.</div>
+  <div class="card"><div class="kpis">
+    <div class="kpi"><div class="l">Status</div><div class="v" style="font-size:18px"><span class="badge badge-gold">SIMULATED</span></div><div class="s" style="color:var(--muted)">demo environment</div></div>
+    <div class="kpi"><div class="l">Session</div><div class="v" style="font-size:18px">localhost:8194</div></div>
+    <div class="kpi"><div class="l">Last reference pull</div><div class="v" style="font-size:18px">${ASOF} 08:12</div></div>
+    <div class="kpi"><div class="l">Fields tracked</div><div class="v" style="font-size:18px">22</div></div>
+  </div></div>
+  <div class="card"><div class="sec-title">Field map</div>
+    <table class="data"><thead><tr><th>App field</th><th>Bloomberg field</th><th>Cadence</th><th>Status</th></tr></thead><tbody>
+      <tr><td>Price</td><td>PX_LAST</td><td>on open + on demand</td><td><span class="badge badge-green">ok</span></td></tr>
+      <tr><td>P/E · Fwd P/E</td><td>PE_RATIO · BEST_PE_RATIO</td><td>daily</td><td><span class="badge badge-green">ok</span></td></tr>
+      <tr><td>EPS growth</td><td>BEST_EPS_LT_GROWTH</td><td>daily</td><td><span class="badge badge-green">ok</span></td></tr>
+      <tr><td>Beta · Volatility</td><td>BETA_ADJ_OVERRIDABLE · VOLATILITY_90D</td><td>daily</td><td><span class="badge badge-green">ok</span></td></tr>
+      <tr><td>ROIC · WACC</td><td>RETURN_ON_INV_CAPITAL · WACC</td><td>weekly</td><td><span class="badge badge-green">ok</span></td></tr>
+      <tr><td>FCF · Net debt · Shares</td><td>CF_FREE_CASH_FLOW · NET_DEBT · EQY_SH_OUT</td><td>weekly</td><td><span class="badge badge-green">ok</span></td></tr>
+    </tbody></table>
+    <p class="mini-note">In this public demo every field is served from a bundled synthetic dataset — no live Bloomberg session, no firm entitlements.</p>
+  </div>`;
+},
+
+audit(){
+  return `
+  <div class="page-title">Audit Log</div>
+  <div class="page-sub">Every official change is recorded with actor, action, and timestamp.</div>
+  <div class="card">
+    <table class="data"><thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead><tbody>
+      <tr><td>${ASOF} 08:12</td><td>PM terminal</td><td><span class="badge badge-blue">import</span></td><td>Price file applied — 1,240 observations</td></tr>
+      <tr><td>2026-07-21 09:34</td><td>PM terminal</td><td><span class="badge badge-solid">publish</span></td><td>Allocation v7 published, effective 2026-08-01 — "Trim tech, add ABBV"</td></tr>
+      <tr><td>2026-07-21 09:28</td><td>PM terminal</td><td><span class="badge badge-gold">propose</span></td><td>Draft rebalance proposed — 5 weight changes</td></tr>
+      <tr><td>2026-07-18 14:02</td><td>Intern (E. Smith)</td><td><span class="badge badge-blue">screen</span></td><td>Research screen run — 16 names scored</td></tr>
+      <tr><td>2026-07-18 11:40</td><td>Intern (E. Smith)</td><td><span class="badge badge-blue">dcf</span></td><td>DCF saved — MSFT, fair value grid exported</td></tr>
+      <tr><td>2026-07-17 10:15</td><td>PM terminal</td><td><span class="badge badge-blue">stress</span></td><td>Stress run — 4 scenarios, full coverage</td></tr>
+    </tbody></table>
+  </div>`;
+},
+};
+
+/* ===== screener engine ===== */
+const CANDIDATES = [
+  {t:"GOOGL",n:"Alphabet Inc",       sec:"Communication",pe:22.8,fpe:19.7,peg:1.4,roic:26.1,wacc:9.0, dy:0.4, beta:1.04,vol:27.3,g:16.8},
+  {t:"AMZN", n:"Amazon.com Inc",     sec:"Discretionary",pe:38.4,fpe:30.6,peg:1.7,roic:13.8,wacc:9.2, dy:0.0, beta:1.15,vol:29.8,g:22.4},
+  {t:"NVDA", n:"NVIDIA Corp",        sec:"Technology",   pe:47.9,fpe:32.1,peg:1.3,roic:65.4,wacc:10.2,dy:0.03,beta:1.66,vol:44.2,g:36.5},
+  {t:"META", n:"Meta Platforms Inc", sec:"Communication",pe:27.8,fpe:24.1,peg:1.9,roic:28.9,wacc:9.6, dy:0.3, beta:1.21,vol:33.0,g:14.5},
+  {t:"TSLA", n:"Tesla Inc",          sec:"Discretionary",pe:96.4,fpe:71.2,peg:3.9,roic:8.9, wacc:10.8,dy:0.0, beta:2.05,vol:55.1,g:25.0},
+];
+const g2gStock = t => H.find(h=>h.t===t) || CANDIDATES.find(h=>h.t===t);
+const SCR_RULES=[
+  {m:"P/E",f:"pe",dir:"low",g:18,y:28},
+  {m:"PEG",f:"peg",dir:"low",g:2,y:3.5},
+  {m:"ROIC − WACC",f:"_sp",dir:"high",g:6,y:2},
+  {m:"Div Yld",f:"dy",dir:"high",g:2.5,y:1},
+  {m:"Beta",f:"beta",dir:"low",g:0.9,y:1.1},
+  {m:"90d Vol",f:"vol",dir:"low",g:20,y:26},
+];
+function uniChange(){
+  document.getElementById("uniTickWrap").classList.toggle("hidden", document.getElementById("uniSel").value!=="stocks");
+  runG2GScreen(false);
+}
+function runG2GScreen(announce){
+  const mode=document.getElementById("uniSel").value;
+  let stocks, missing=[];
+  if(mode==="stocks"){
+    const toks=[...new Set(document.getElementById("uniTickers").value.toUpperCase().split(/[\s,]+/).filter(Boolean))];
+    stocks=toks.map(g2gStock).filter(Boolean);
+    missing=toks.filter(t=>!g2gStock(t));
+  } else stocks=H;
+  const val=(h,r)=> r.f==="_sp" ? (h.roic&&h.wacc? h.roic-h.wacc : null) : h[r.f];
+  const color=(r,v)=> v==null?"":"cell-"+(r.dir==="low" ? (v<=r.g?"green":v<=r.y?"yellow":"red") : (v>=r.g?"green":v>=r.y?"yellow":"red"));
+  const rows=stocks.map(h=>{
+    let pts=0,tot=0;
+    const cells=SCR_RULES.map(r=>{ const v=val(h,r); if(v!=null){tot++; const c=color(r,v); pts+=c==="cell-green"?1:c==="cell-yellow"?0.5:0;}
+      return `<td class="num ${color(r,val(h,r))}">${val(h,r)==null?"—":val(h,r).toFixed(r.f==="beta"||r.f==="peg"?2:1)+(["dy","vol","_sp"].includes(r.f)?"%":"")}</td>`; }).join("");
+    const s=Math.round(pts/tot*100);
+    return {s, html:`<tr><td><b>${h.t}</b></td><td>${h.sec}</td><td class="num"><b>${s}</b></td>${cells}</tr>`};
+  }).sort((a,b)=>b.s-a.s).map(r=>r.html).join("");
+  document.getElementById("g2gScrOut").innerHTML=`
+    <div class="note-banner">Sorted by composite score. Green/yellow thresholds mirror the PM's screening rules — configurable per metric.${missing.length?` No reference data for: <b>${missing.join(", ")}</b>.`:""}</div>
+    <div style="overflow-x:auto"><table class="data"><thead><tr><th>Ticker</th><th>Sector</th><th class="num">Score</th>${SCR_RULES.map(r=>`<th class="num">${r.m}</th>`).join("")}</tr></thead><tbody>${rows||`<tr><td colspan="9"><div class="note-banner" style="margin:0">No recognized tickers.</div></td></tr>`}</tbody></table></div>
+    <p class="mini-note">Fields: simulated Bloomberg reference data as of ${ASOF}. Financials (JPM) carry no ROIC/WACC — rendered as — and excluded from that rule's scoring.</p>`;
+  if(announce) toast("Screen recomputed from simulated Bloomberg fields (demo)");
+}
+
+/* ===== DCF engine ===== */
+function dcfDefaults(t){
+  const h=H.find(x=>x.t===t);
+  document.getElementById("inG").value=Math.min(25,Math.max(0,h.g));
+  document.getElementById("inF").value=Math.min(15,Math.max(0,h.g*0.55)).toFixed(1);
+  document.getElementById("inTg").value=2.5;
+  document.getElementById("inW").value=h.wacc||9;
+}
+function resetDcf(){ dcfDefaults(document.getElementById("dcfT").value); runDcf(); }
+function dcfValue(h,g1,g2,tg,w){
+  let fcf=h.fcf, pv=0;
+  for(let y=1;y<=5;y++){ fcf*=1+g1/100; pv+=fcf/Math.pow(1+w/100,y); }
+  for(let y=6;y<=10;y++){ fcf*=1+g2/100; pv+=fcf/Math.pow(1+w/100,y); }
+  const tv=fcf*(1+tg/100)/((w-tg)/100);
+  pv+=tv/Math.pow(1+w/100,10);
+  return (pv - h.nd)/h.sh;
+}
+function runDcf(){
+  const t=document.getElementById("dcfT").value, h=H.find(x=>x.t===t);
+  const g1=+document.getElementById("inG").value, g2=+document.getElementById("inF").value,
+        tg=+document.getElementById("inTg").value, w=+document.getElementById("inW").value;
+  document.getElementById("oG").textContent=g1.toFixed(1)+"%";
+  document.getElementById("oF").textContent=g2.toFixed(1)+"%";
+  document.getElementById("oTg").textContent=tg.toFixed(2)+"%";
+  document.getElementById("oW").textContent=w.toFixed(2)+"%";
+  if(w<=tg+0.5){ document.getElementById("dcfOut").innerHTML=`<div class="note-banner">Discount rate must exceed terminal growth — widen the spread to get a finite terminal value.</div>`; return; }
+  const fv=dcfValue(h,g1,g2,tg,w), up=(fv/h.px-1)*100;
+  const verdictBg = up>15? "background:#e0efe4" : up<-15? "background:#f7e2df" : "background:var(--gold-100)";
+  const verdictTxt= up>15? "Undervalued vs. model" : up<-15? "Overvalued vs. model" : "Near fair value";
+  /* sensitivity: WACC × terminal growth */
+  const ws=[w-1,w-0.5,w,w+0.5,w+1], tgs=[tg-1,tg-0.5,tg,tg+0.5,tg+1].filter(x=>x>=0);
+  const head=`<tr><th>Fair value</th>${ws.map(x=>`<th class="num">WACC ${x.toFixed(2)}%</th>`).join("")}</tr>`;
+  const body=tgs.map(tgx=>`<tr><td><b>g∞ ${tgx.toFixed(2)}%</b></td>${ws.map(wx=>{
+    if(wx<=tgx+0.5) return `<td class="num na">—</td>`;
+    const v=dcfValue(h,g1,g2,tgx,wx), u=(v/h.px-1)*100;
+    const c=u>15?"cell-green":u<-15?"cell-red":"cell-yellow";
+    return `<td class="num ${c}">$${v.toFixed(0)}</td>`; }).join("")}</tr>`).join("");
+  document.getElementById("dcfOut").innerHTML=`
+    <div class="verdict" style="${verdictBg}">
+      <div style="font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Modeled fair value — ${h.t}</div>
+      <div class="fv">$${fv.toFixed(2)}</div>
+      <div class="vs">vs. price $${h.px.toFixed(2)} · <b class="${cls(up)}">${fmtPct(up)}</b> — ${verdictTxt}</div>
+    </div>
+    <div class="kpis" style="margin-bottom:14px">
+      <div class="kpi"><div class="l">Base FCF</div><div class="v" style="font-size:18px">$${h.fcf.toFixed(1)}B</div></div>
+      <div class="kpi"><div class="l">Net debt</div><div class="v" style="font-size:18px">${h.nd<0?"−$"+Math.abs(h.nd)+"B (net cash)":"$"+h.nd+"B"}</div></div>
+      <div class="kpi"><div class="l">Shares out</div><div class="v" style="font-size:18px">${h.sh.toFixed(2)}B</div></div>
+      <div class="kpi"><div class="l">Company WACC</div><div class="v" style="font-size:18px">${h.wacc.toFixed(1)}%</div></div>
+    </div>
+    <div class="chart-title">Sensitivity — fair value by WACC × terminal growth</div>
+    <div style="overflow-x:auto"><table class="data"><thead>${head}</thead><tbody>${body}</tbody></table></div>
+    <p class="mini-note">Two-stage FCF model: explicit years 1–10, Gordon terminal value, discounted at WACC; equity value = PV − net debt. Inputs are synthetic — this grid is for demonstrating the workflow, not investment advice.</p>`;
+}
+
+/* ===== rebalance ===== */
+function rebTotal(){
+  const inputs=[...document.querySelectorAll("input.wt")];
+  let tot=0;
+  inputs.forEach(inp=>{
+    const i=+inp.dataset.i, v=parseFloat(inp.value)||0; tot+=v;
+    const d=v-H[i].w, cell=document.getElementById("drift"+i);
+    if(cell){ cell.textContent=Math.abs(d)<0.005?"—":fmtPct(d,2); cell.className="num "+(Math.abs(d)<0.005?"na":cls(d)); }
+  });
+  const c=document.getElementById("rebTotalCell");
+  if(c){ c.textContent=tot.toFixed(2)+"%"; c.className="num "+(tot<=100.001?"total-ok":"total-off");
+    document.getElementById("rebCash").textContent = tot<=100.001? `cash ${(100-tot).toFixed(2)}%` : "over 100% — reduce"; }
+  return tot;
+}
+function tradeList(){
+  const inputs=[...document.querySelectorAll("input.wt")];
+  const trades=[];
+  inputs.forEach(inp=>{ const i=+inp.dataset.i, v=parseFloat(inp.value)||0, d=v-H[i].w;
+    if(Math.abs(d)>0.005) trades.push({t:H[i].t, d, dollars:d*10000}); });
+  const out=document.getElementById("tradeOut");
+  if(!trades.length){ out.innerHTML=`<div class="note-banner" style="margin-top:14px">No drift — every holding is at target.</div>`; return; }
+  out.innerHTML=`<div class="card" style="border-color:var(--gold-500)">
+    <div class="sec-title">Trade list — per $1M of model assets</div>
+    <table class="data"><thead><tr><th>Ticker</th><th>Side</th><th class="num">Weight change</th><th class="num">Approx. trade</th></tr></thead>
+    <tbody>${trades.map(x=>`<tr><td><b>${x.t}</b></td><td>${x.d>0?'<span class="badge badge-green">BUY</span>':'<span class="badge badge-red">SELL</span>'}</td><td class="num ${cls(x.d)}">${fmtPct(x.d,2)}</td><td class="num">$${Math.abs(Math.round(x.dollars)).toLocaleString()}</td></tr>`).join("")}</tbody></table>
+    <p class="mini-note">Demo math: 1% of weight ≈ $10,000 per $1M. The production tool exported this straight to the PM's Excel blotter.</p></div>`;
+  toast("Trade list generated.");
+}
+
+/* ===== routing ===== */
+const TITLES={dashboard:"Dashboard",screener:"Screener",dcf:"DCF Valuation",stress:"Stress Test",rebalance:"Rebalance",imports:"Data Imports",bloomberg:"Bloomberg",audit:"Audit"};
+function go(p){
+  document.querySelectorAll(".sb-link").forEach(b=>b.classList.toggle("active",b.dataset.p===p));
+  document.getElementById("crumbPage").textContent=TITLES[p];
+  document.getElementById("content").innerHTML=PAGES[p]();
+  if(p==="rebalance") rebTotal();
+  if(p==="dcf"){ dcfDefaults(document.getElementById("dcfT").value); runDcf(); }
+  if(p==="screener") runG2GScreen(false);
+  window.scrollTo(0,0);
+}
+go("dashboard");
+</script>
+</body>
+</html>
