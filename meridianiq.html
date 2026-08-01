@@ -51,6 +51,7 @@ button{font-family:inherit}
 .pub-hero h1 em{color:#e4c57e;font-style:normal}
 .pub-hero p{color:#c3cede;max-width:600px;margin:16px auto 26px;font-size:15px;line-height:1.6}
 .pub-hero .btn-secondary{background:transparent;color:#fff;border-color:rgba(255,255,255,.5)}
+.pub-demo-actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 .pub-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:24px}
 .pub-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r2);padding:22px;box-shadow:var(--shadow)}
 .pub-card h3{font-size:15px;color:var(--heading);margin-bottom:8px}
@@ -73,7 +74,7 @@ button{font-family:inherit}
 .role-switch{margin-top:20px;border-top:1px dashed var(--line);padding-top:16px}
 .role-switch .rs-label{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;text-align:center}
 .role-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.role-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r1);padding:10px 8px;cursor:pointer;text-align:center;transition:.15s}
+.role-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:var(--r1);padding:10px 8px;cursor:pointer;text-align:center;transition:.15s;font:inherit}
 .role-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
 .role-btn b{display:block;font-size:13px;color:var(--heading)}
 .role-btn span{font-size:11.5px;color:var(--muted)}
@@ -160,13 +161,28 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
   .sb-foot .who{display:none}
   .content{padding:16px}
 }
+@media(max-width:720px){
+  .pub-header{padding:12px 16px;gap:12px;flex-wrap:wrap}
+  .pub-nav{order:3;width:100%;overflow-x:auto;gap:14px;padding-top:4px}
+  .pub-nav a{white-space:nowrap}
+  .pub-main{padding:24px 16px}
+  .pub-hero{padding:38px 20px}
+  .pub-hero h1{font-size:28px}
+  #demoForm{grid-template-columns:1fr !important}
+  #demoForm > div{grid-column:1 !important}
+}
+@media(max-width:440px){
+  .login-card{width:100%;padding:24px}
+  .role-btns{grid-template-columns:1fr}
+  .pub-demo-actions a{width:100%}
+}
 </style>
 </head>
 <body>
 
 <div id="demoBar">
   <a href="index.html">&larr; Back to Emerson's resume</a>
-  <span class="note">MeridianIQ demo environment — every figure is provenance-labeled synthetic data. No firm or client data.</span>
+  <span class="note">Recreated MeridianIQ product demo — every figure is provenance-labeled synthetic data. No firm or client data.</span>
 </div>
 
 <!-- ================= PUBLIC SITE ================= -->
@@ -179,15 +195,16 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
       <a href="#data-sec">Data Sources</a>
       <a href="#demo-sec">Request Demo</a>
     </nav>
-    <a class="btn-primary" href="#login" onclick="show('login')">Log in</a>
+    <a class="btn-primary" href="#login" onclick="show('login')">Choose demo role</a>
   </div>
   <div class="pub-main">
     <div class="pub-hero">
       <h1>Rebalance once. <em>Preserve the past.</em><br>Propagate the future.</h1>
       <p>MeridianIQ is a customizable portfolio intelligence platform for RIAs, wealth managers, family offices, and investment teams. We don't force your investment process to fit our software — we adapt the software to fit your investment process.</p>
-      <div style="display:flex;gap:12px;justify-content:center">
-        <a class="btn-primary" style="background:var(--accent);border-color:var(--accent)" href="#demo-sec">Request a demo</a>
-        <a class="btn-secondary" href="#features-sec">See the features</a>
+      <div class="pub-demo-actions">
+        <a class="btn-primary" style="background:var(--accent);border-color:var(--accent)" href="#advisor" onclick="enterApp('advisor')">Launch Advisor demo</a>
+        <a class="btn-secondary" href="#admin" onclick="enterApp('admin')">Launch Admin demo</a>
+        <a class="btn-secondary" href="#features-sec">Explore the marketing page</a>
       </div>
     </div>
 
@@ -221,19 +238,19 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
     <div class="pub-steps" id="demo-sec">
       <h2>Request a demo</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:620px" id="demoForm">
-        <div><label class="field-label">Your name *</label><input class="field-input"></div>
-        <div><label class="field-label">Work email *</label><input class="field-input" type="email"></div>
-        <div><label class="field-label">Firm</label><input class="field-input"></div>
-        <div><label class="field-label">Your role</label><input class="field-input"></div>
-        <div style="grid-column:1/-1"><label class="field-label">About your firm and what you're looking for</label><textarea class="field-input" rows="3"></textarea></div>
-        <div><button class="btn-primary" onclick="demoThanks()">Request a demo</button></div>
+        <div><label class="field-label" for="requestName">Your name *</label><input class="field-input" id="requestName"></div>
+        <div><label class="field-label" for="requestEmail">Work email *</label><input class="field-input" id="requestEmail" type="email"></div>
+        <div><label class="field-label" for="requestFirm">Firm</label><input class="field-input" id="requestFirm"></div>
+        <div><label class="field-label" for="requestRole">Your role</label><input class="field-input" id="requestRole"></div>
+        <div style="grid-column:1/-1"><label class="field-label" for="requestAbout">About your firm and what you're looking for</label><textarea class="field-input" id="requestAbout" rows="3"></textarea></div>
+        <div><button class="btn-primary" type="button" onclick="demoThanks()">Preview request flow</button></div>
       </div>
-      <div id="demoDone" class="hidden" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r1);padding:16px;color:var(--warn-ink);font-weight:600">Thank you — we'll be in touch.</div>
+      <div id="demoDone" class="hidden" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r1);padding:16px;color:var(--warn-ink);font-weight:600">Demo only — no request was sent. To discuss MeridianIQ, email <a href="mailto:essmith0605@gmail.com">essmith0605@gmail.com</a>.</div>
     </div>
   </div>
   <div class="pub-footer">
     MeridianIQ · Portfolio intelligence for investment firms.<br>
-    This is a demonstration environment created for a portfolio/resume site. All data shown anywhere in this product is synthetic. <a href="#" onclick="return false">Privacy</a> · <a href="#" onclick="return false">Terms</a>
+    This is a recreated product demonstration for a portfolio site, not a live service. All data shown anywhere in this product is synthetic.
   </div>
 </div>
 
@@ -243,17 +260,17 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
     <form class="login-card" onsubmit="signIn(event)">
       <div class="product">Meridian<span class="iq">IQ</span></div>
       <div class="tagline">Portfolio intelligence for investment firms</div>
-      <label class="field-label">Email</label>
+      <label class="field-label" for="loginEmail">Email</label>
       <input class="field-input" type="email" id="loginEmail" value="advisor@demofirm.com" style="margin-bottom:12px">
-      <label class="field-label">Password</label>
-      <input class="field-input" type="password" value="demo-demo-demo" style="margin-bottom:20px">
+      <label class="field-label" for="loginPassword">Password</label>
+      <input class="field-input" type="password" id="loginPassword" value="demo-demo-demo" style="margin-bottom:20px">
       <button class="btn-primary" style="width:100%" type="submit">Sign in</button>
 
       <div class="role-switch">
         <div class="rs-label">Demo access — pick a role</div>
         <div class="role-btns">
-          <div class="role-btn" onclick="enterApp('advisor')"><b>Advisor</b><span>Demo Firm · portfolio manager</span></div>
-          <div class="role-btn" onclick="enterApp('admin')"><b>Platform Admin</b><span>Operator console</span></div>
+          <button class="role-btn" type="button" onclick="enterApp('advisor')"><b>Advisor</b><span>Demo Firm · portfolio manager</span></button>
+          <button class="role-btn" type="button" onclick="enterApp('admin')"><b>Platform Admin</b><span>Operator console</span></button>
         </div>
       </div>
       <a class="login-back" href="#home" onclick="show('public')">&larr; Back to the MeridianIQ site</a>
@@ -281,7 +298,7 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
       <div class="sb-foot">
         <div class="avatar">A</div>
         <div class="who"><div class="nm">Avery Demo</div><div class="rl">portfolio manager</div></div>
-        <button class="sb-out" title="Sign out" onclick="show('login')">&#10162;</button>
+        <button class="sb-out" title="Sign out" aria-label="Sign out" onclick="show('login')">&#10162;</button>
       </div>
     </div>
     <div class="content" id="appContent"></div>
@@ -301,7 +318,7 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
       <div class="sb-foot">
         <div class="avatar">E</div>
         <div class="who"><div class="nm">Emerson Smith</div><div class="rl">platform admin</div></div>
-        <button class="sb-out" title="Sign out" onclick="show('login')">&#10162;</button>
+        <button class="sb-out" title="Sign out" aria-label="Sign out" onclick="show('login')">&#10162;</button>
       </div>
     </div>
     <div class="content" id="adminContent"></div>
@@ -864,10 +881,15 @@ monitoring(){ return `
 };
 
 /* init */
-if(location.hash==="#login") show("login");
-else if(location.hash==="#app"){ enterApp("advisor"); go("portfolio"); }
-else if(location.hash==="#admin") enterApp("admin");
-else show("public");
+function routeFromHash(){
+  if(location.hash==="#login") show("login");
+  else if(location.hash==="#app"){ enterApp("advisor"); go("portfolio"); }
+  else if(location.hash==="#advisor") enterApp("advisor");
+  else if(location.hash==="#admin") enterApp("admin");
+  else show("public");
+}
+window.addEventListener("hashchange",routeFromHash);
+routeFromHash();
 </script>
 </body>
 </html>
