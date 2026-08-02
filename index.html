@@ -44,7 +44,7 @@
   body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:linear-gradient(180deg,#fff 0,var(--bg) 720px);color:var(--ink);line-height:1.58;font-size:15px}
   .skip-link{position:fixed;top:10px;left:12px;z-index:100;transform:translateY(-160%);background:#fff;color:var(--navy);border:2px solid var(--gold);border-radius:8px;padding:9px 14px;font-weight:750;text-decoration:none;box-shadow:var(--shadow-lift);transition:transform .15s}
   .skip-link:focus{transform:translateY(0)}
-  :where(a,button):focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--accent)}
+  :where(a,button,summary):focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--accent)}
   #main-content:focus{outline:none}
 
   /* ---------- Nav ---------- */
@@ -183,6 +183,21 @@
   .proj-btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
   .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
   .tag{font-size:.71rem;font-weight:600;padding:3.5px 10px;border-radius:5px;background:var(--accent-soft);color:var(--accent)}
+  .project-deep{margin-top:22px;background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .project-deep summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 22px;cursor:pointer;list-style:none}
+  .project-deep summary::-webkit-details-marker{display:none}
+  .project-deep-title{display:block;color:var(--navy);font-family:var(--serif);font-size:1.08rem;font-weight:700}
+  .project-deep-status{display:block;margin-top:2px;color:var(--muted);font-size:.78rem;font-weight:600}
+  .project-deep-toggle{display:flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;color:var(--accent);font-size:1.15rem;line-height:1;transition:transform .2s,background .2s}
+  .project-deep[open] .project-deep-toggle{transform:rotate(45deg);background:var(--accent-soft)}
+  .project-deep-body{padding:22px;border-top:1px solid var(--line-soft)}
+  .project-deep-intro{max-width:850px;color:var(--ink-soft);font-size:.92rem}
+  .project-deep-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+  .project-deep-item{padding:16px;background:#fff;border:1px solid var(--line-soft);border-radius:10px}
+  .project-deep-item h4{color:var(--gold);font-size:.69rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
+  .project-deep-item p{margin-top:6px;color:var(--ink-soft);font-size:.84rem;line-height:1.55}
+  .project-deep-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  @media(max-width:760px){.project-deep-grid{grid-template-columns:1fr}.project-deep summary,.project-deep-body{padding-left:18px;padding-right:18px}}
 
   /* ---------- Education / skills ---------- */
   .two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
@@ -286,7 +301,7 @@
     <div class="eyebrow">Finance · Investments · Analytics</div>
     <h1>Emerson Smith</h1>
     <div class="resume-label">Interactive Resume</div>
-    <p class="tagline"><b>Finance student at Auburn University</b> with three internships across <b>wealth management, equity research, and financial analytics</b>. I’ve evaluated investments, analyzed portfolios, and supported financial decisions.</p>
+    <p class="tagline"><b>Finance student at Auburn University</b> with three internships across <b>wealth management, equity research, and financial analytics</b>. I pair investment and portfolio analysis with software development to build practical tools for financial teams.</p>
     <div class="chips">
       <a class="chip chip-email" href="mailto:essmith0605@gmail.com"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>essmith0605@gmail.com</a>
       <a class="chip chip-phone" href="tel:4049222615"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>404-922-2615</a>
@@ -438,6 +453,7 @@
         </ul>
       </div></div>
     </div>
+
   </section>
 
   <!-- ============ PROJECTS ============ -->
@@ -485,6 +501,38 @@
       </a>
 
     </div>
+
+    <details class="project-deep reveal">
+      <summary data-analytics-event="project_details_opened" data-analytics-label="MeridianIQ details">
+        <span>
+          <span class="project-deep-title">More about MeridianIQ</span>
+          <span class="project-deep-status">Independent portfolio intelligence project · in development</span>
+        </span>
+        <span class="project-deep-toggle" aria-hidden="true">+</span>
+      </summary>
+      <div class="project-deep-body">
+        <p class="project-deep-intro">MeridianIQ is the independent follow-on project I began after building the G2G Portfolio Intelligence platform during my Steward Partners internship. It explores how core portfolio-management workflows can live in one coherent system while keeping the underlying financial data transparent and traceable.</p>
+        <div class="project-deep-grid">
+          <div class="project-deep-item">
+            <h4>Origin</h4>
+            <p>The internship platform showed how holdings analysis, DCF valuation, research screening, stress testing, and rebalancing could replace a collection of disconnected spreadsheets.</p>
+          </div>
+          <div class="project-deep-item">
+            <h4>What I’ve built</h4>
+            <p>The current concept adds advisor dashboards, model portfolios, watchlists, data imports, a configurable screener, stress tests, rebalance history, and role-based administration.</p>
+          </div>
+          <div class="project-deep-item">
+            <h4>Current status</h4>
+            <p>It is an independent project and recreated demo—not an operating advisory firm, production investment platform, or launched business. The public version uses synthetic data only.</p>
+          </div>
+        </div>
+        <div class="project-deep-actions">
+          <a class="proj-btn primary" href="meridianiq.html" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ project page">Explore the project</a>
+          <a class="proj-btn" href="meridianiq.html#advisor" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ advisor">Open the advisor demo</a>
+          <a class="proj-btn" href="meridianiq.html#admin" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ admin">Open the admin demo</a>
+        </div>
+      </div>
+    </details>
   </section>
 
   <!-- ============ EDUCATION ============ -->
