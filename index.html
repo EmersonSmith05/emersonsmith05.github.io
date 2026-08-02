@@ -29,10 +29,10 @@
 <link rel="apple-touch-icon" sizes="180x180" href="https://emersonsmith05.github.io/assets/es-logo-256.png">
 <style>
   :root{
-    --ink:#1a2433; --ink-soft:#3c4859; --muted:#68738a;
+    --ink:#1a2433; --ink-soft:#3c4859; --muted:#626d82;
     --bg:#f4f6f8; --card:#ffffff; --line:#dfe4ea; --line-soft:#edf0f4;
     --navy:#12263f; --navy-2:#1c3a5e; --accent:#1b4fa0; --accent-soft:#eaf0fa;
-    --gold:#c46a32; --gold-soft:#fbefe7;
+    --gold:#a64f24; --gold-soft:#fbefe7;
     --serif:Georgia,'Times New Roman',serif;
     --radius:16px;
     --shadow:0 1px 2px rgba(18,38,63,.04), 0 8px 24px rgba(18,38,63,.055);
@@ -41,13 +41,17 @@
   *{margin:0;padding:0;box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:linear-gradient(180deg,#fff 0,var(--bg) 720px);color:var(--ink);line-height:1.58;font-size:15px}
+  .skip-link{position:fixed;top:10px;left:12px;z-index:100;transform:translateY(-160%);background:#fff;color:var(--navy);border:2px solid var(--gold);border-radius:8px;padding:9px 14px;font-weight:750;text-decoration:none;box-shadow:var(--shadow-lift);transition:transform .15s}
+  .skip-link:focus{transform:translateY(0)}
+  :where(a,button):focus-visible{outline:3px solid #fff;outline-offset:2px;box-shadow:0 0 0 5px var(--accent)}
+  #main-content:focus{outline:none}
 
   /* ---------- Nav ---------- */
   #progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),#d8b25e);z-index:60;width:0;transition:width .1s linear}
   .nav-links a.active{background:var(--accent-soft);color:var(--accent)}
   nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(14px);border-bottom:1px solid rgba(18,38,63,.09)}
   .nav-inner{max-width:1120px;margin:0 auto;padding:0 24px;height:64px;display:flex;align-items:center;justify-content:space-between;position:relative}
-  .nav-name{font-family:var(--serif);font-weight:700;letter-spacing:.15px;font-size:1.08rem;color:var(--navy)}
+  .nav-name{font-family:var(--serif);font-weight:700;letter-spacing:.15px;font-size:1.08rem;color:var(--navy);text-decoration:none;border-radius:6px}
   .nav-name span{color:var(--gold)}
   .nav-links{display:flex;gap:2px;align-items:center}
   .nav-links a{color:var(--ink-soft);text-decoration:none;font-size:.83rem;font-weight:650;padding:8px 12px;border-radius:8px;transition:.15s}
@@ -55,7 +59,6 @@
   .nav-links a.cta{background:var(--navy);color:#fff;margin-left:10px;padding-inline:16px;box-shadow:0 5px 16px rgba(18,38,63,.16)}
   .nav-links a.cta:hover{background:var(--navy-2)}
   .nav-toggle{display:none;border:1px solid var(--line);background:#fff;color:var(--navy);border-radius:8px;padding:7px 11px;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer}
-  .nav-toggle:focus-visible,.xp-head:focus-visible,.proj-btn:focus-visible{outline:3px solid rgba(27,79,160,.32);outline-offset:2px}
   @media(max-width:720px){
     .nav-toggle{display:inline-flex;align-items:center;gap:7px}
     .nav-links{display:none;position:absolute;top:calc(100% + 1px);left:16px;right:16px;flex-direction:column;align-items:stretch;gap:3px;background:#fff;border:1px solid var(--line);border-radius:0 0 12px 12px;padding:10px;box-shadow:var(--shadow-lift)}
@@ -98,8 +101,8 @@
   .impact span b{display:block;margin-bottom:3px;color:#e3a779;font-size:.62rem;line-height:1.25;letter-spacing:.09em;text-transform:uppercase}
   .hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}
   .btn{display:inline-flex;align-items:center;gap:9px;padding:12px 22px;border-radius:9px;font-weight:600;font-size:.92rem;text-decoration:none;transition:.18s;border:1px solid transparent;cursor:pointer}
-  .btn-gold{background:var(--gold);color:#fff;box-shadow:0 7px 20px rgba(196,106,50,.28)}
-  .btn-gold:hover{background:#ad5828;transform:translateY(-1px)}
+  .btn-gold{background:var(--gold);color:#fff;box-shadow:0 7px 20px rgba(166,79,36,.28)}
+  .btn-gold:hover{background:#8f431e;transform:translateY(-1px)}
   .btn-ghost{border-color:rgba(255,255,255,.38);color:#fff}
   .btn-ghost:hover{background:rgba(255,255,255,.1)}
   .demo-note{margin-top:23px;font-size:.76rem;line-height:1.5;color:#8fa5bf;display:flex;align-items:flex-start;gap:8px;max-width:650px}
@@ -146,7 +149,7 @@
   .launch{display:inline-flex;align-items:center;gap:6px;margin-left:8px;padding:3px 12px;border-radius:999px;background:var(--navy);color:#fff !important;font-size:.75rem;font-weight:700;text-decoration:none;vertical-align:1px;transition:.15s;white-space:nowrap}
   .launch:hover{background:var(--accent);transform:translateY(-1px)}
   .launch::after{content:"↗";font-size:.8rem}
-  .hint{font-size:.77rem;color:#93a0b5;padding:0 24px 15px 98px;font-style:italic}
+  .hint{font-size:.77rem;color:var(--muted);padding:0 24px 15px 98px;font-style:italic}
   @media(max-width:760px){
     .xp-body-inner,.hint{padding-left:24px}
     .xp-head{display:grid;grid-template-columns:56px minmax(0,1fr) 20px;gap:7px 14px}
@@ -206,7 +209,7 @@
   .edu-head .sub{color:var(--muted);font-size:.88rem;margin-top:2px}
   .gpa-badge{margin-left:auto;text-align:center;background:var(--gold-soft);border:1px solid #e8d9b0;border-radius:10px;padding:9px 18px}
   .gpa-badge .n{font-family:var(--serif);font-size:1.35rem;font-weight:700;color:var(--gold)}
-  .gpa-badge .l{font-size:.64rem;font-weight:700;letter-spacing:.1em;color:#9c8447;text-transform:uppercase}
+  .gpa-badge .l{font-size:.64rem;font-weight:700;letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
   .course-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
   .course{font-size:.79rem;padding:5px 13px;border-radius:999px;border:1px solid var(--line);color:var(--ink-soft);background:#fafbfd}
   .skill-h{font-size:.74rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
@@ -215,7 +218,7 @@
   .cert:last-child{border-bottom:none}
   .cert .ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:0 0 30px}
   .cert b{color:var(--ink)}
-  .cert .by{margin-left:auto;font-size:.74rem;color:#98a3b8;font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .cert .by{margin-left:auto;font-size:.74rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 
   footer{border-top:1px solid var(--line);background:#fff}
   .foot-inner{max-width:1060px;margin:0 auto;padding:30px 24px;display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;color:var(--muted);font-size:.82rem}
@@ -225,7 +228,15 @@
   .reveal.in{opacity:1;transform:none}
   .proj-grid .proj:nth-child(2){transition-delay:.09s}
   .proj-grid .proj:nth-child(3){transition-delay:.18s}
-  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important;scroll-behavior:auto !important}
+    .reveal{opacity:1;transform:none}
+  }
+  @media(forced-colors:active){
+    .nav-links a.active,.proj-live,.launch,.btn,.tag{forced-color-adjust:auto}
+    :where(a,button):focus-visible{outline:3px solid Highlight}
+  }
 
   @media print{
     nav,#progress,.hero-actions,.demo-note,.launch,.hero-visual,footer .foot-inner div:last-child{display:none !important}
@@ -241,25 +252,27 @@
     .proj-preview{display:none}
   }
 </style>
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
 </head>
 <body>
 
-<div id="progress"></div>
-<nav>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+<div id="progress" aria-hidden="true"></div>
+<nav aria-label="Primary navigation">
   <div class="nav-inner">
-    <div class="nav-name">Emerson <span>Smith</span></div>
-    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu <span aria-hidden="true">☰</span></button>
+    <a class="nav-name" href="#top" aria-label="Emerson Smith — back to top">Emerson <span>Smith</span></a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav" aria-label="Open navigation menu">Menu <span aria-hidden="true">☰</span></button>
     <div class="nav-links" id="primary-nav">
       <a href="#experience">Experience</a>
       <a href="#projects">Projects</a>
       <a href="#education">Education</a>
       <a href="#skills">Skills</a>
-      <a class="cta" href="Emerson_Smith_Resume.pdf" target="_blank">Resume PDF</a>
+      <a class="cta" href="Emerson_Smith_Resume.pdf" target="_blank" rel="noopener" data-analytics-event="resume_download" data-analytics-label="navigation">Resume PDF</a>
     </div>
   </div>
 </nav>
 
-<header>
+<header id="top">
   <div class="hero"><div class="hero-grid">
   <div class="hero-text">
     <div class="eyebrow">Finance · Analytics · Software</div>
@@ -278,8 +291,8 @@
       <div class="impact"><strong>Hours → minutes</strong><span><b>Across every project</b>I turn workflow bottlenecks into competitive advantages</span></div>
     </div>
     <div class="hero-actions">
-      <a class="btn btn-gold" href="#projects">Explore live project demos</a>
-      <a class="btn btn-ghost" href="Emerson_Smith_Resume.pdf" target="_blank">Download resume (PDF)</a>
+      <a class="btn btn-gold" href="#projects" data-analytics-event="projects_opened" data-analytics-label="hero">Explore live project demos</a>
+      <a class="btn btn-ghost" href="Emerson_Smith_Resume.pdf" target="_blank" rel="noopener" data-analytics-event="resume_download" data-analytics-label="hero">Download resume (PDF)</a>
     </div>
     <p class="demo-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>These are recreated, browser-based demos of tools I built. They use synthetic data only — no client, portfolio, or company records appear anywhere.</p>
   </div>
@@ -291,17 +304,17 @@
         <span class="class-year">Class of 2027</span>
       </figcaption>
     </figure>
-    <img class="headshot-float" src="assets/headshot.jpg" decoding="async" alt="Emerson Smith">
+    <img class="headshot-float" src="assets/headshot.jpg" decoding="async" alt="Headshot of Emerson Smith">
   </div>
   </div></div>
 </header>
 
-<main>
+<main id="main-content" tabindex="-1">
 
   <!-- ============ EXPERIENCE ============ -->
-  <section id="experience">
+  <section id="experience" aria-labelledby="experience-title">
     <div class="sec-label">Professional Experience</div>
-    <h2 class="sec-title">Where I've worked — and what I built there</h2>
+    <h2 class="sec-title" id="experience-title">Where I've worked — and what I built there</h2>
     <p class="sec-sub">Open any role for the details. Highlighted lines lead to recreated, interactive demos of the workflows I built.</p>
 
     <!-- MeridianIQ -->
@@ -443,29 +456,29 @@
   </section>
 
   <!-- ============ PROJECTS ============ -->
-  <section id="projects">
+  <section id="projects" aria-labelledby="projects-title">
     <div class="sec-label">Project Demos</div>
-    <h2 class="sec-title">Don't take my word for it — click around</h2>
+    <h2 class="sec-title" id="projects-title">Don't take my word for it — click around</h2>
     <p class="sec-sub">Recreated, interactive versions of workflows I've built. Each demo runs in your browser on synthetic data and is clearly separated from the original production environment.</p>
     <div class="proj-grid">
 
       <article class="proj reveal">
-        <a class="proj-preview" href="meridianiq.html" aria-label="Open the MeridianIQ marketing page"><img src="assets/card-miq.png" alt="MeridianIQ — portfolio analytics dashboard" loading="lazy"><span class="proj-live">● Recreated demo</span></a>
+        <a class="proj-preview" href="meridianiq.html" aria-label="Open the MeridianIQ marketing page" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ marketing page"><img src="assets/card-miq.png" alt="MeridianIQ portfolio analytics dashboard with performance and risk panels" loading="lazy"><span class="proj-live">● Recreated demo</span></a>
         <div class="proj-body">
           <h3>MeridianIQ</h3>
           <div class="ctx">Project in development · recreated product demo</div>
           <p>A multi-tenant portfolio intelligence concept with dashboards, risk and stress analytics, screening, watchlists, and firm administration. Explore the marketing page or enter either demo role directly.</p>
           <div class="tag-row"><span class="tag">React-style SPA</span><span class="tag">Python backend</span><span class="tag">Role-based access</span></div>
           <div class="proj-actions">
-            <a class="proj-btn primary" href="meridianiq.html#advisor">Advisor demo</a>
-            <a class="proj-btn" href="meridianiq.html#admin">Admin demo</a>
-            <a class="proj-btn" href="meridianiq.html">Marketing page</a>
+            <a class="proj-btn primary" href="meridianiq.html#advisor" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ advisor">Advisor demo</a>
+            <a class="proj-btn" href="meridianiq.html#admin" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ admin">Admin demo</a>
+            <a class="proj-btn" href="meridianiq.html" data-analytics-event="demo_launch" data-analytics-label="MeridianIQ marketing page">Marketing page</a>
           </div>
         </div>
       </article>
 
-      <a class="proj reveal" href="g2g-portfolio.html">
-        <div class="proj-preview"><img src="assets/card-g2g.png" alt="G2G Portfolio Intelligence dashboard" loading="lazy"><span class="proj-live">● Recreated demo</span></div>
+      <a class="proj reveal" href="g2g-portfolio.html" aria-label="Open the G2G Portfolio Intelligence recreated demo" data-analytics-event="demo_launch" data-analytics-label="G2G Portfolio Intelligence">
+        <div class="proj-preview"><img src="assets/card-g2g.png" alt="G2G Portfolio Intelligence dashboard showing holdings and portfolio analytics" loading="lazy"><span class="proj-live">● Recreated demo</span></div>
         <div class="proj-body">
           <h3>G2G Portfolio Intelligence</h3>
           <div class="ctx">Recreated demo · original adopted for daily use</div>
@@ -475,8 +488,8 @@
         </div>
       </a>
 
-      <a class="proj reveal" href="thor-sorter.html">
-        <div class="proj-preview"><img src="assets/card-thor.png" alt="Financial Statement Sorter workbench" loading="lazy"><span class="proj-live">● Recreated demo</span></div>
+      <a class="proj reveal" href="thor-sorter.html" aria-label="Open the Financial Statement Sorter recreated demo" data-analytics-event="demo_launch" data-analytics-label="Financial Statement Sorter">
+        <div class="proj-preview"><img src="assets/card-thor.png" alt="Financial Statement Sorter workbench with categorized transactions" loading="lazy"><span class="proj-live">● Recreated demo</span></div>
         <div class="proj-body">
           <h3>Financial Statement Sorter</h3>
           <div class="ctx">Recreated demo of the internship workflow</div>
@@ -490,9 +503,9 @@
   </section>
 
   <!-- ============ EDUCATION ============ -->
-  <section id="education">
+  <section id="education" aria-labelledby="education-title">
     <div class="sec-label">Education</div>
-    <h2 class="sec-title">Auburn University</h2>
+    <h2 class="sec-title" id="education-title">Auburn University</h2>
     <div class="panel reveal">
       <div class="edu-head">
         <a href="https://www.auburn.edu" target="_blank" rel="noopener" class="logo pad" style="background:#fff;flex:0 0 56px;width:56px;height:56px;border-radius:11px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line-soft)">
@@ -511,9 +524,9 @@
   </section>
 
   <!-- ============ SKILLS ============ -->
-  <section id="skills">
+  <section id="skills" aria-labelledby="skills-title">
     <div class="sec-label">Skills &amp; Certifications</div>
-    <h2 class="sec-title">Toolkit</h2>
+    <h2 class="sec-title" id="skills-title">Toolkit</h2>
     <div class="two-col">
       <div class="panel reveal">
         <div class="skill-group">
@@ -550,32 +563,159 @@
 
 <script>
 function toggleXp(head){
-  const open=head.parentElement.classList.toggle('open');
+  const item=head.parentElement;
+  const panel=document.getElementById(head.getAttribute('aria-controls'));
+  const open=item.classList.toggle('open');
   head.setAttribute('aria-expanded',String(open));
+  if(panel){
+    panel.toggleAttribute('inert',!open);
+    panel.setAttribute('aria-hidden',String(!open));
+  }
 }
+
+document.querySelectorAll('.xp-head').forEach((head,index)=>{
+  const panel=document.getElementById(head.getAttribute('aria-controls'));
+  head.id=head.id||`experience-toggle-${index+1}`;
+  if(panel){
+    panel.setAttribute('aria-labelledby',head.id);
+    panel.setAttribute('aria-hidden','true');
+    panel.setAttribute('inert','');
+  }
+});
+
+document.querySelectorAll('svg').forEach(svg=>{
+  if(!svg.hasAttribute('aria-label')&&!svg.querySelector('title')){
+    svg.setAttribute('aria-hidden','true');
+    svg.setAttribute('focusable','false');
+  }
+});
+
 const navToggle=document.querySelector('.nav-toggle');
 const primaryNav=document.getElementById('primary-nav');
-navToggle.addEventListener('click',()=>{
-  const open=primaryNav.classList.toggle('open');
+function setNavOpen(open,{returnFocus=false}={}){
+  primaryNav.classList.toggle('open',open);
   navToggle.setAttribute('aria-expanded',String(open));
+  navToggle.setAttribute('aria-label',open?'Close navigation menu':'Open navigation menu');
+  if(returnFocus) navToggle.focus();
+}
+navToggle.addEventListener('click',()=>{
+  setNavOpen(!primaryNav.classList.contains('open'));
 });
 primaryNav.addEventListener('click',e=>{
   if(e.target.closest('a') && primaryNav.classList.contains('open')){
-    primaryNav.classList.remove('open');
-    navToggle.setAttribute('aria-expanded','false');
+    setNavOpen(false);
   }
 });
-const io = new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.08});
-document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
-window.addEventListener('scroll',()=>{
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&primaryNav.classList.contains('open')) setNavOpen(false,{returnFocus:true});
+});
+document.addEventListener('pointerdown',e=>{
+  if(primaryNav.classList.contains('open')&&!e.target.closest('nav')) setNavOpen(false);
+});
+window.addEventListener('resize',()=>{
+  if(window.innerWidth>720&&primaryNav.classList.contains('open')) setNavOpen(false);
+},{passive:true});
+
+const prefersReducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const revealItems=document.querySelectorAll('.reveal');
+if('IntersectionObserver' in window&&!prefersReducedMotion){
+  const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      revealObserver.unobserve(entry.target);
+    }
+  }),{threshold:.08});
+  revealItems.forEach(item=>revealObserver.observe(item));
+}else{
+  revealItems.forEach(item=>item.classList.add('in'));
+}
+
+/*
+  Privacy-safe analytics bridge. It records only fixed content labels—never email
+  addresses, phone numbers, full URLs, form entries, cookies, or device IDs.
+  Events are sent only if Plausible, Umami, or Google Analytics is configured.
+*/
+const analyticsQueue=[];
+function deliverAnalyticsEvent(name,properties){
+  try{
+    if(typeof window.plausible==='function'){
+      window.plausible(name,{props:properties});
+      return true;
+    }
+    if(window.umami&&typeof window.umami.track==='function'){
+      window.umami.track(name,properties);
+      return true;
+    }
+    if(typeof window.gtag==='function'){
+      window.gtag('event',name,properties);
+      return true;
+    }
+  }catch(error){
+    return false;
+  }
+  return false;
+}
+function trackResumeEvent(name,properties={}){
+  const safeProperties={};
+  ['label','source','section'].forEach(key=>{
+    if(typeof properties[key]==='string') safeProperties[key]=properties[key].slice(0,80);
+  });
+  if(!deliverAnalyticsEvent(name,safeProperties)) analyticsQueue.push({name,properties:safeProperties});
+}
+function flushAnalyticsQueue(){
+  let index=0;
+  while(index<analyticsQueue.length){
+    const event=analyticsQueue[index];
+    if(!deliverAnalyticsEvent(event.name,event.properties)) break;
+    analyticsQueue.splice(index,1);
+  }
+}
+window.resumeAnalytics={track:trackResumeEvent,flush:flushAnalyticsQueue};
+window.addEventListener('load',()=>setTimeout(flushAnalyticsQueue,800),{once:true});
+
+document.querySelectorAll('.launch,.demo-link').forEach(link=>{
+  if(!link.dataset.analyticsEvent){
+    const role=link.closest('.xp')?.querySelector('.xp-title h3')?.textContent.trim()||'Experience project';
+    link.dataset.analyticsEvent='demo_launch';
+    link.dataset.analyticsLabel=role;
+  }
+});
+document.addEventListener('click',event=>{
+  const target=event.target.closest('[data-analytics-event]');
+  if(!target) return;
+  trackResumeEvent(target.dataset.analyticsEvent,{
+    label:target.dataset.analyticsLabel||'Unlabeled action',
+    source:target.closest('nav')?'navigation':target.closest('header')?'hero':target.closest('#experience')?'experience':'projects'
+  });
+});
+
+if('IntersectionObserver' in window){
+  const projectViewObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      const title=entry.target.querySelector('h3')?.textContent.trim()||'Project';
+      trackResumeEvent('project_viewed',{label:title,section:'projects'});
+      projectViewObserver.unobserve(entry.target);
+    }
+  }),{threshold:.45});
+  document.querySelectorAll('#projects .proj').forEach(project=>projectViewObserver.observe(project));
+}
+
+function updateScrollState(){
   const h=document.documentElement, pct=h.scrollTop/(h.scrollHeight-h.clientHeight)*100;
-  document.getElementById('progress').style.width=pct+'%';
+  document.getElementById('progress').style.width=(Number.isFinite(pct)?pct:0)+'%';
   let cur='';
   for(const sec of document.querySelectorAll('main section')){
     if(sec.getBoundingClientRect().top<140) cur=sec.id;
   }
-  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+cur));
-},{passive:true});
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(link=>{
+    const active=link.getAttribute('href')==='#'+cur;
+    link.classList.toggle('active',active);
+    if(active) link.setAttribute('aria-current','location');
+    else link.removeAttribute('aria-current');
+  });
+}
+window.addEventListener('scroll',updateScrollState,{passive:true});
+updateScrollState();
 </script>
 </body>
 </html>
