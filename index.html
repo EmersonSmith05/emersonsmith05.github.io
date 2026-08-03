@@ -172,7 +172,7 @@
   }
 
   /* ---------- Projects ---------- */
-  .proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+  .proj-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
   .proj{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:transform .22s,box-shadow .22s,border-color .22s;text-decoration:none;color:inherit}
   .proj:hover{transform:translateY(-4px);box-shadow:var(--shadow-lift);border-color:#d5dce8}
   .proj-preview{display:block;aspect-ratio:1280/758;position:relative;overflow:hidden;border-bottom:1px solid var(--line);background:#0f1c30}
@@ -189,6 +189,9 @@
   .proj-btn{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:7px;padding:7px 10px;color:var(--accent);background:#fff;text-decoration:none;font-size:.76rem;font-weight:700;line-height:1.2}
   .proj-btn:hover{border-color:var(--accent);background:var(--accent-soft)}
   .proj-btn.primary{background:var(--navy);border-color:var(--navy);color:#fff}
+  @media(max-width:960px){
+    .proj-grid{grid-template-columns:1fr;max-width:720px;margin-inline:auto}
+  }
   .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:13px}
   .tag{font-size:.71rem;font-weight:600;padding:3.5px 10px;border-radius:5px;background:var(--accent-soft);color:var(--accent)}
   .project-deep{margin-top:22px;background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
@@ -328,11 +331,11 @@
     <p class="tagline"><b>Finance student at Auburn University</b> with three internships across <b>wealth management, equity research, and financial analytics</b>. I pair investment and portfolio analysis with software development to build practical tools for financial teams.</p>
     </div>
     <div class="chips">
-      <a class="chip chip-email" href="mailto:essmith0605@gmail.com"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>essmith0605@gmail.com</a>
-      <a class="chip chip-phone" href="tel:4049222615"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>404-922-2615</a>
-      <a class="chip chip-location" href="https://www.google.com/maps/place/Panama+City+Beach,+FL" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="desktop-label">Panama City Beach, FL</span><span class="mobile-label">Panama City Beach, FL</span></a>
-      <a class="chip chip-education" href="https://www.auburn.edu" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg><span class="desktop-label">Auburn University · Class of 2027</span><span class="mobile-label">Auburn · 2027</span></a>
-      <a class="chip chip-linkedin" href="https://www.linkedin.com/in/emersonsmith05" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span class="desktop-label">linkedin.com/in/emersonsmith05</span><span class="mobile-label">LinkedIn</span></a>
+      <a class="chip chip-email" href="mailto:essmith0605@gmail.com" data-analytics-event="contact_click" data-analytics-label="email"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 6 10-6"/></svg>essmith0605@gmail.com</a>
+      <a class="chip chip-phone" href="tel:4049222615" data-analytics-event="contact_click" data-analytics-label="phone"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>404-922-2615</a>
+      <a class="chip chip-location" href="https://www.google.com/maps/place/Panama+City+Beach,+FL" target="_blank" rel="noopener" data-analytics-event="profile_link_click" data-analytics-label="location"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg><span class="desktop-label">Panama City Beach, FL</span><span class="mobile-label">Panama City Beach, FL</span></a>
+      <a class="chip chip-education" href="https://www.auburn.edu" target="_blank" rel="noopener" data-analytics-event="profile_link_click" data-analytics-label="Auburn University"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10 12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg><span class="desktop-label">Auburn University · Class of 2027</span><span class="mobile-label">Auburn · 2027</span></a>
+      <a class="chip chip-linkedin" href="https://www.linkedin.com/in/emersonsmith05" target="_blank" rel="noopener" data-analytics-event="profile_link_click" data-analytics-label="LinkedIn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg><span class="desktop-label">linkedin.com/in/emersonsmith05</span><span class="mobile-label">LinkedIn</span></a>
     </div>
     <div class="impact-heading" id="impact-heading">Workflow impact at a glance</div>
     <div class="impact-strip" aria-labelledby="impact-heading">
@@ -636,6 +639,10 @@ function toggleXp(head){
   if(panel){
     panel.toggleAttribute('inert',!open);
     panel.setAttribute('aria-hidden',String(!open));
+  }
+  if(open){
+    const role=head.querySelector('h3')?.textContent.trim()||'Experience';
+    trackResumeEvent('experience_opened',{label:role,section:'experience'});
   }
 }
 

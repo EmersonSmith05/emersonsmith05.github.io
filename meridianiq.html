@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MeridianIQ — Portfolio intelligence for investment firms</title>
-<meta name="description" content="MeridianIQ demo environment — a multi-tenant portfolio intelligence platform. All data shown is synthetic.">
+<title>MeridianIQ — independent portfolio intelligence project</title>
+<meta name="description" content="An independent portfolio intelligence project in development, presented through recreated advisor and administrator demos using synthetic data.">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="75da6c92-4649-4e3c-9912-4e8037b3a4e2"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230f2136'/%3E%3Ctext x='32' y='42' font-family='Segoe UI,sans-serif' font-size='26' font-weight='bold' fill='%23ffffff' text-anchor='middle'%3EM%3Ctspan fill='%23b98a2f'%3EIQ%3C/tspan%3E%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -83,6 +84,8 @@ button{font-family:inherit}
 .app-shell{display:flex;min-height:calc(100vh - 34px)}
 .sidebar{width:216px;flex:0 0 216px;background:linear-gradient(180deg,#0f2136 0%,#12283f 100%);color:#d7dee8;display:flex;flex-direction:column;position:sticky;top:0;height:calc(100vh - 34px)}
 .sb-head{padding:18px 16px 12px;font-size:17px;font-weight:700;color:#fff}
+.mobile-nav-toggle{display:none}
+.mobile-nav-panel{display:contents}
 .sb-sec{font-size:10.5px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent);padding:14px 16px 6px}
 .sb-link{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:#c3cede;text-decoration:none;border-left:3px solid transparent;cursor:pointer;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
 .sb-link:hover{background:rgba(255,255,255,.05)}
@@ -160,6 +163,7 @@ input.wt{width:90px;text-align:right;padding:6px 8px;border:1px solid var(--line
   .app-shell{flex-direction:column}
   .sidebar{width:100%;flex:none;height:auto;position:static;flex-direction:row;align-items:center;overflow-x:auto;padding:0 8px}
   .sb-head{font-size:15px;padding:10px 12px;white-space:nowrap}
+  .mobile-nav-panel{display:flex;align-items:center}
   .sb-sec{display:none}
   .sb-link{width:auto;white-space:nowrap;border-left:none;border-bottom:3px solid transparent;padding:12px 10px}
   .sb-link.active{border-bottom-color:var(--accent)}
@@ -225,6 +229,17 @@ table.data tbody tr{transition:background .12s}
 }
 @media(max-width:560px){
   #demoBar::before{display:none}
+  .sidebar{position:relative;display:flex;flex-wrap:wrap;overflow:visible;padding:7px 10px;gap:8px;box-shadow:0 8px 22px rgba(15,33,54,.17)}
+  .sb-head{flex:1;padding:7px 4px}
+  .mobile-nav-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:8px 12px;border:1px solid rgba(228,197,126,.38);border-radius:7px;background:rgba(255,255,255,.07);color:#fff;font:700 13px var(--sans);cursor:pointer}
+  .mobile-nav-toggle .chev{transition:transform .16s}
+  .sidebar.nav-open .mobile-nav-toggle .chev{transform:rotate(180deg)}
+  .mobile-nav-panel{display:none;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:7px 0 2px;border-top:1px solid rgba(255,255,255,.1)}
+  .sidebar.nav-open .mobile-nav-panel{display:grid}
+  .mobile-nav-panel .sb-sec{display:none}
+  .mobile-nav-panel .sb-link{width:100%;min-height:44px;padding:10px 11px;border:0;border-radius:6px;white-space:normal}
+  .mobile-nav-panel .sb-link.active{background:rgba(255,255,255,.12);box-shadow:inset 3px 0 var(--accent)}
+  .mobile-nav-panel .sb-foot{grid-column:1/-1;width:100%;justify-content:flex-end;padding:6px 2px 0}
   .workspace-role{display:none}
   .page-title{font-size:24px}
   .meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -236,8 +251,8 @@ table.data tbody tr{transition:background .12s}
 <body>
 
 <div id="demoBar">
-  <a href="index.html">&larr; Back to Emerson's resume</a>
-  <span class="note">Recreated MeridianIQ product demo — every figure is provenance-labeled synthetic data. No firm or client data.</span>
+  <a href="index.html" data-analytics-event="resume_return" data-analytics-label="MeridianIQ demo bar">&larr; Back to Emerson's resume</a>
+  <span class="note">Recreated demo of an independent project in development — every figure is provenance-labeled synthetic data. No firm or client data.</span>
 </div>
 
 <!-- ================= PUBLIC SITE ================= -->
@@ -248,14 +263,14 @@ table.data tbody tr{transition:background .12s}
       <a href="#home" onclick="scrollTop_()">About</a>
       <a href="#features-sec">Features</a>
       <a href="#data-sec">Data Sources</a>
-      <a href="#demo-sec">Request Demo</a>
+      <a href="#demo-sec">Demo Flow</a>
     </nav>
     <a class="btn-primary" href="#login" onclick="show('login')">Choose demo role</a>
   </div>
   <div class="pub-main">
     <div class="pub-hero">
       <h1>Rebalance once. <em>Preserve the past.</em><br>Propagate the future.</h1>
-      <p>MeridianIQ is a customizable portfolio intelligence platform for RIAs, wealth managers, family offices, and investment teams. We don't force your investment process to fit our software — we adapt the software to fit your investment process.</p>
+      <p>MeridianIQ is an independent portfolio intelligence project exploring how RIAs, wealth managers, family offices, and investment teams could bring portfolio workflows into one adaptable, transparent system.</p>
       <div class="pub-demo-actions">
         <a class="btn-primary" style="background:var(--accent);border-color:var(--accent)" href="#advisor" onclick="enterApp('advisor')">Launch Advisor demo</a>
         <a class="btn-secondary" href="#admin" onclick="enterApp('admin')">Launch Admin demo</a>
@@ -264,8 +279,8 @@ table.data tbody tr{transition:background .12s}
     </div>
 
     <div class="pub-cards">
-      <div class="pub-card"><h3>Firm-level models, not client accounts</h3><p>MeridianIQ manages your firm's model portfolios. Client accounts, tax lots, and books of record stay where they belong — in your custodial systems.</p></div>
-      <div class="pub-card"><h3>Honest numbers</h3><p>We never fabricate, seed, or estimate financial values. Missing data renders as missing, every value carries provenance, and estimates are labeled as estimates.</p></div>
+      <div class="pub-card"><h3>Firm-level models, not client accounts</h3><p>The concept focuses on firm model portfolios while client accounts, tax lots, and books of record remain in custodial systems.</p></div>
+      <div class="pub-card"><h3>Honest numbers</h3><p>The design treats missing data as missing, attaches provenance to displayed values, and clearly labels estimates.</p></div>
       <div class="pub-card"><h3>Built for firms</h3><p>Roles, audit trails, versioned allocation history, and a propose &rarr; preview &rarr; approve &rarr; publish workflow that keeps official records official.</p></div>
     </div>
 
@@ -282,16 +297,16 @@ table.data tbody tr{transition:background .12s}
     </div>
 
     <div class="pub-steps" id="data-sec">
-      <h2>How firms work with us</h2>
+      <h2>How the concept is designed to work</h2>
       <ol>
         <li><b>Evaluate in an isolated demo</b> — provenance-labeled demonstration data, no live connections.</li>
         <li><b>Choose the lawful data path</b> — file imports today; licensed provider connectors by written agreement.</li>
-        <li><b>Adapt the platform to your workflow</b> — base analytics, or the custom strategy tier with proprietary models.</li>
+        <li><b>Adapt the workspace to the investment process</b> — combine core analytics with configurable firm methods and models.</li>
       </ol>
     </div>
 
     <div class="pub-steps" id="demo-sec">
-      <h2>Request a demo</h2>
+      <h2>Preview the project inquiry flow</h2>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:620px" id="demoForm">
         <div><label class="field-label" for="requestName">Your name *</label><input class="field-input" id="requestName"></div>
         <div><label class="field-label" for="requestEmail">Work email *</label><input class="field-input" id="requestEmail" type="email"></div>
@@ -300,12 +315,12 @@ table.data tbody tr{transition:background .12s}
         <div style="grid-column:1/-1"><label class="field-label" for="requestAbout">About your firm and what you're looking for</label><textarea class="field-input" id="requestAbout" rows="3"></textarea></div>
         <div><button class="btn-primary" type="button" onclick="demoThanks()">Preview request flow</button></div>
       </div>
-      <div id="demoDone" class="hidden" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r1);padding:16px;color:var(--warn-ink);font-weight:600">Demo only — no request was sent. To discuss MeridianIQ, email <a href="mailto:essmith0605@gmail.com">essmith0605@gmail.com</a>.</div>
+      <div id="demoDone" class="hidden" style="background:var(--accent-soft);border:1px solid var(--accent);border-radius:var(--r1);padding:16px;color:var(--warn-ink);font-weight:600">Demo only — no request was sent. To discuss the project, email <a href="mailto:essmith0605@gmail.com">essmith0605@gmail.com</a>.</div>
     </div>
   </div>
   <div class="pub-footer">
-    MeridianIQ · Portfolio intelligence for investment firms.<br>
-    This is a recreated product demonstration for a portfolio site, not a live service. All data shown anywhere in this product is synthetic.
+    MeridianIQ · Independent portfolio intelligence project in development.<br>
+    This is a recreated project demonstration for a portfolio site, not a live service or operating business. All data shown anywhere in this project is synthetic.
   </div>
 </div>
 
@@ -338,6 +353,8 @@ table.data tbody tr{transition:background .12s}
   <div class="app-shell">
     <div class="sidebar">
       <div class="sb-head">Meridian<span class="iq">IQ</span></div>
+      <button class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="advisorMobileNav">Sections <span class="chev" aria-hidden="true">⌄</span></button>
+      <div class="mobile-nav-panel" id="advisorMobileNav">
       <div class="sb-sec">Overview</div>
       <button class="sb-link" data-page="dashboard" onclick="go('dashboard')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</button>
       <div class="sb-sec">Manage</div>
@@ -355,6 +372,7 @@ table.data tbody tr{transition:background .12s}
         <div class="who"><div class="nm">Avery Demo</div><div class="rl">portfolio manager</div></div>
         <button class="sb-out" title="Sign out" aria-label="Sign out" onclick="show('login')">&#10162;</button>
       </div>
+      </div>
     </div>
     <div class="workspace-main">
       <div class="workspace-bar">
@@ -371,6 +389,8 @@ table.data tbody tr{transition:background .12s}
   <div class="app-shell">
     <div class="sidebar">
       <div class="sb-head">Meridian<span class="iq">IQ</span></div>
+      <button class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="adminMobileNav">Sections <span class="chev" aria-hidden="true">⌄</span></button>
+      <div class="mobile-nav-panel" id="adminMobileNav">
       <div class="sb-sec">Manage</div>
       <button class="sb-link" data-page="firms" onclick="goAdmin('firms')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/></svg>Firms</button>
       <button class="sb-link" data-page="requests" onclick="goAdmin('requests')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Requests</button>
@@ -380,6 +400,7 @@ table.data tbody tr{transition:background .12s}
         <div class="avatar">E</div>
         <div class="who"><div class="nm">Emerson Smith</div><div class="rl">platform admin</div></div>
         <button class="sb-out" title="Sign out" aria-label="Sign out" onclick="show('login')">&#10162;</button>
+      </div>
       </div>
     </div>
     <div class="workspace-main">
@@ -441,12 +462,25 @@ function demoThanks(){ document.getElementById("demoForm").classList.add("hidden
 function signIn(e){ e.preventDefault(); const em=document.getElementById("loginEmail").value; enterApp(em.includes("admin")&&!em.includes("advisor") ? "admin":"advisor"); }
 function enterApp(role){ if(role==="admin"){ show("admin"); goAdmin("firms"); } else { show("app"); go("dashboard"); } }
 function toast(msg){ const t=document.createElement("div"); t.className="toast"; t.textContent=msg; document.getElementById("toasts").appendChild(t); setTimeout(()=>t.remove(),3500); }
+function setMIQNavOpen(sidebar,open){
+  sidebar.classList.toggle("nav-open",open);
+  sidebar.querySelector(".mobile-nav-toggle")?.setAttribute("aria-expanded",String(open));
+}
+document.querySelectorAll(".mobile-nav-toggle").forEach(toggle=>{
+  toggle.addEventListener("click",()=>{
+    const sidebar=toggle.closest(".sidebar");
+    setMIQNavOpen(sidebar,!sidebar.classList.contains("nav-open"));
+  });
+});
+function closeMIQMobileNavs(){
+  if(window.innerWidth<=560) document.querySelectorAll(".sidebar.nav-open").forEach(sidebar=>setMIQNavOpen(sidebar,false));
+}
 
 function setActive(container,page){
   document.querySelectorAll(`#${container} .sb-link`).forEach(b=>b.classList.toggle("active", b.dataset.page===page));
 }
-function go(page){ setActive("view-app",page); document.getElementById("appContent").innerHTML = PAGES[page](); afterRender(page); }
-function goAdmin(page){ setActive("view-admin",page); document.getElementById("adminContent").innerHTML = ADMIN_PAGES[page](); }
+function go(page){ setActive("view-app",page); document.getElementById("appContent").innerHTML = PAGES[page](); afterRender(page); closeMIQMobileNavs(); }
+function goAdmin(page){ setActive("view-admin",page); document.getElementById("adminContent").innerHTML = ADMIN_PAGES[page](); closeMIQMobileNavs(); }
 
 /* ================= chart helpers (inline SVG) ================= */
 const PALETTE = ["#1e3a5f","#b98a2f","#2e5a8f","#5c8a5f","#7a5c8f","#9a7b4f","#4a7a8f","#8f5c5c"];
@@ -1035,6 +1069,25 @@ function routeFromHash(){
 }
 window.addEventListener("hashchange",routeFromHash);
 routeFromHash();
+</script>
+<script>
+function trackMIQEvent(name,label){
+  if(window.umami&&typeof window.umami.track==="function"){
+    window.umami.track(name,{label:String(label||"").slice(0,80),page:"MeridianIQ"});
+  }
+}
+document.addEventListener("click",event=>{
+  const explicit=event.target.closest("[data-analytics-event]");
+  if(explicit) trackMIQEvent(explicit.dataset.analyticsEvent,explicit.dataset.analyticsLabel);
+  const section=event.target.closest(".sb-link");
+  if(section) trackMIQEvent("demo_section_view",section.textContent.trim());
+  const role=event.target.closest(".role-btn,.pub-demo-actions a");
+  if(role) trackMIQEvent("demo_role_or_entry",role.textContent.trim());
+  const publicNav=event.target.closest(".pub-nav a");
+  if(publicNav) trackMIQEvent("project_page_navigation",publicNav.textContent.trim());
+  const action=event.target.closest("#appContent button,#adminContent button,#demoForm button");
+  if(action) trackMIQEvent("demo_action",action.textContent.trim());
+});
 </script>
 </body>
 </html>

@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G2G Portfolio Intelligence — demo</title>
 <meta name="description" content="Demo of the G2G Portfolio Intelligence platform built during a Steward Partners G2G wealth management internship. Synthetic model portfolio; simulated Bloomberg feed.">
+<script defer src="https://cloud.umami.is/script.js" data-website-id="75da6c92-4649-4e3c-9912-4e8037b3a4e2"></script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230d2c1d'/%3E%3Ctext x='32' y='42' font-family='Georgia,serif' font-size='22' font-weight='bold' fill='%23e8f0ea' text-anchor='middle'%3EG%3Ctspan fill='%23d4b96b'%3E2%3C/tspan%3EG%3C/text%3E%3C/svg%3E">
 <style>
 :root{
@@ -37,6 +38,8 @@ a{color:var(--brand-700)}
 .lockup .at::before,.lockup .at::after{content:"";height:1px;width:26px;background:var(--gold-600)}
 .lockup .at span{font-size:8.5px;letter-spacing:2.4px;color:var(--gold-400)}
 .lockup .tag{font-size:8.5px;letter-spacing:2px;color:#8faf98;margin-top:8px;font-style:italic}
+.mobile-nav-toggle{display:none}
+.mobile-nav-panel{display:contents}
 .sb-sec{font-size:10.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--gold-400);padding:16px 16px 6px}
 .sb-link{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:13.5px;color:#c6d6ca;border-left:3px solid transparent;cursor:pointer;background:none;border-top:none;border-right:none;border-bottom:none;width:100%;text-align:left}
 .sb-link:hover{background:rgba(255,255,255,.05)}
@@ -94,6 +97,7 @@ table.data tfoot td{border-top:2px solid var(--line);font-weight:700;border-bott
   .lockup{border-bottom:none;padding:8px 12px;text-align:left}
   .lockup .mono{font-size:18px}
   .lockup .wm,.lockup .at,.lockup .tag{display:none}
+  .mobile-nav-panel{display:flex;align-items:center}
   .sb-sec{display:none}
   .sb-link{width:auto;white-space:nowrap;border-left:none;border-bottom:3px solid transparent;padding:12px 10px}
   .sb-link.active{border-bottom-color:var(--gold-500)}
@@ -146,6 +150,16 @@ table.data tbody tr{transition:background .12s}
 }
 @media(max-width:560px){
   #demoBar::before{display:none}
+  .sidebar{position:relative;display:flex;flex-wrap:wrap;overflow:visible;padding:7px 10px;gap:8px;box-shadow:0 8px 22px rgba(8,31,20,.16)}
+  .lockup{flex:1;padding:6px 4px}
+  .mobile-nav-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:8px 12px;border:1px solid rgba(212,185,107,.4);border-radius:7px;background:rgba(255,255,255,.07);color:#fff;font:700 13px var(--sans);cursor:pointer}
+  .mobile-nav-toggle .chev{transition:transform .16s}
+  .sidebar.nav-open .mobile-nav-toggle .chev{transform:rotate(180deg)}
+  .mobile-nav-panel{display:none;width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px;padding:7px 0 2px;border-top:1px solid rgba(255,255,255,.1)}
+  .sidebar.nav-open .mobile-nav-panel{display:grid}
+  .mobile-nav-panel .sb-sec{display:none}
+  .mobile-nav-panel .sb-link{width:100%;min-height:44px;padding:10px 11px;border:0;border-radius:6px;white-space:normal}
+  .mobile-nav-panel .sb-link.active{background:rgba(255,255,255,.12);box-shadow:inset 3px 0 var(--gold-500)}
   .content{padding:16px}
   .page-title{font-size:24px}
   .card{max-width:100%;overflow-x:auto}
@@ -157,7 +171,7 @@ table.data tbody tr{transition:background .12s}
 <body>
 
 <div id="demoBar">
-  <a href="index.html">&larr; Back to Emerson's resume</a>
+  <a href="index.html" data-analytics-event="resume_return" data-analytics-label="G2G demo bar">&larr; Back to Emerson's resume</a>
   <span class="note">Recreated demo of the workflow I built during my Steward Partners G2G internship — the model portfolio is synthetic, not the firm's actual book. Bloomberg data is simulated.</span>
 </div>
 
@@ -169,23 +183,26 @@ table.data tbody tr{transition:background .12s}
       <div class="at"><span>AT STEWARD PARTNERS</span></div>
       <div class="tag">GENERATION TO GENERATION</div>
     </div>
-    <div class="sb-sec">Analyze</div>
-    <button class="sb-link" data-p="dashboard" onclick="go('dashboard')">Dashboard</button>
-    <button class="sb-link" data-p="screener" onclick="go('screener')">Screener</button>
-    <button class="sb-link" data-p="dcf" onclick="go('dcf')">DCF Valuation</button>
-    <button class="sb-link" data-p="stress" onclick="go('stress')">Stress Test</button>
-    <div class="sb-sec">Manage</div>
-    <button class="sb-link" data-p="rebalance" onclick="go('rebalance')">Rebalance</button>
-    <button class="sb-link" data-p="imports" onclick="go('imports')">Data Imports</button>
-    <div class="sb-sec">System</div>
-    <button class="sb-link" data-p="bloomberg" onclick="go('bloomberg')">Bloomberg</button>
-    <button class="sb-link" data-p="audit" onclick="go('audit')">Audit</button>
+    <button class="mobile-nav-toggle" type="button" aria-expanded="false" aria-controls="g2gMobileNav">Sections <span class="chev" aria-hidden="true">⌄</span></button>
+    <div class="mobile-nav-panel" id="g2gMobileNav">
+      <div class="sb-sec">Analyze</div>
+      <button class="sb-link" data-p="dashboard" onclick="go('dashboard')">Dashboard</button>
+      <button class="sb-link" data-p="screener" onclick="go('screener')">Screener</button>
+      <button class="sb-link" data-p="dcf" onclick="go('dcf')">DCF Valuation</button>
+      <button class="sb-link" data-p="stress" onclick="go('stress')">Stress Test</button>
+      <div class="sb-sec">Manage</div>
+      <button class="sb-link" data-p="rebalance" onclick="go('rebalance')">Rebalance</button>
+      <button class="sb-link" data-p="imports" onclick="go('imports')">Data Imports</button>
+      <div class="sb-sec">System</div>
+      <button class="sb-link" data-p="bloomberg" onclick="go('bloomberg')">Bloomberg</button>
+      <button class="sb-link" data-p="audit" onclick="go('audit')">Audit</button>
+    </div>
   </div>
   <div class="main">
     <div class="topbar">
       <div class="crumb">G2G Portfolio Intelligence&nbsp;/&nbsp;<b id="crumbPage">Dashboard</b></div>
       <div class="system-status">Bloomberg feed simulated</div>
-      <div class="out"><a class="btn2" style="text-decoration:none" href="index.html">Sign out</a></div>
+      <div class="out"><a class="btn2" style="text-decoration:none" href="index.html" data-analytics-event="resume_return" data-analytics-label="G2G top bar">Sign out</a></div>
     </div>
     <div class="content" id="content"></div>
   </div>
@@ -560,6 +577,13 @@ function tradeList(){
 
 /* ===== routing ===== */
 const TITLES={dashboard:"Dashboard",screener:"Screener",dcf:"DCF Valuation",stress:"Stress Test",rebalance:"Rebalance",imports:"Data Imports",bloomberg:"Bloomberg",audit:"Audit"};
+const g2gSidebar=document.querySelector(".sidebar");
+const g2gNavToggle=document.querySelector(".mobile-nav-toggle");
+function setG2GNavOpen(open){
+  g2gSidebar.classList.toggle("nav-open",open);
+  g2gNavToggle.setAttribute("aria-expanded",String(open));
+}
+g2gNavToggle.addEventListener("click",()=>setG2GNavOpen(!g2gSidebar.classList.contains("nav-open")));
 function go(p){
   document.querySelectorAll(".sb-link").forEach(b=>b.classList.toggle("active",b.dataset.p===p));
   document.getElementById("crumbPage").textContent=TITLES[p];
@@ -567,9 +591,25 @@ function go(p){
   if(p==="rebalance") rebTotal();
   if(p==="dcf"){ dcfDefaults(document.getElementById("dcfT").value); runDcf(); }
   if(p==="screener") runG2GScreen(false);
+  if(window.innerWidth<=560) setG2GNavOpen(false);
   window.scrollTo(0,0);
 }
 go("dashboard");
+</script>
+<script>
+function trackG2GEvent(name,label){
+  if(window.umami&&typeof window.umami.track==="function"){
+    window.umami.track(name,{label:String(label||"").slice(0,80),page:"G2G Portfolio Intelligence"});
+  }
+}
+document.addEventListener("click",event=>{
+  const explicit=event.target.closest("[data-analytics-event]");
+  if(explicit) trackG2GEvent(explicit.dataset.analyticsEvent,explicit.dataset.analyticsLabel);
+  const section=event.target.closest(".sb-link");
+  if(section) trackG2GEvent("demo_section_view",section.textContent.trim());
+  const action=event.target.closest("#content button");
+  if(action&&!action.classList.contains("sb-link")) trackG2GEvent("demo_action",action.textContent.trim());
+});
 </script>
 </body>
 </html>
