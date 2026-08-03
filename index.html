@@ -195,8 +195,15 @@
   .project-deep summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 22px;cursor:pointer;list-style:none}
   .project-deep summary::-webkit-details-marker{display:none}
   .project-deep-heading{display:flex;align-items:center;gap:13px;min-width:0}
-  .project-deep-logo{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px;border-radius:11px;background:#0f2136;color:#fff;font-size:17px;font-weight:750;letter-spacing:-.03em;box-shadow:0 5px 14px rgba(15,33,54,.18)}
+  .project-deep-logo{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px;border-radius:11px;background:#0f2136;color:#fff;font-size:16px;font-weight:750;letter-spacing:-.03em;box-shadow:0 5px 14px rgba(15,33,54,.18)}
   .project-deep-logo .iq{color:#d3a54b}
+  .project-deep-logo-type{line-height:1}
+  .project-deep-logo-chart{position:relative;width:27px;height:8px;margin-top:3px}
+  .project-deep-logo-chart i{position:absolute;height:2px;border-radius:999px;background:#d3a54b;transform-origin:left center}
+  .project-deep-logo-chart i:nth-child(1){left:0;top:6px;width:9px;transform:rotate(-20deg)}
+  .project-deep-logo-chart i:nth-child(2){left:8px;top:3px;width:7px;transform:rotate(22deg)}
+  .project-deep-logo-chart i:nth-child(3){left:14px;top:6px;width:13px;transform:rotate(-27deg)}
+  .project-deep-logo-chart::after{content:"";position:absolute;right:0;top:0;width:5px;height:5px;border-top:2px solid #d3a54b;border-right:2px solid #d3a54b;transform:rotate(8deg)}
   .project-deep-title{display:block;color:var(--navy);font-family:var(--serif);font-size:1.08rem;font-weight:700}
   .project-deep-status{display:block;margin-top:2px;color:var(--muted);font-size:.78rem;font-weight:600}
   .project-deep-toggle{display:flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;color:var(--accent);font-size:1.15rem;line-height:1;transition:transform .2s,background .2s}
@@ -525,7 +532,10 @@
     <details class="project-deep reveal">
       <summary data-analytics-event="project_details_opened" data-analytics-label="MeridianIQ details">
         <span class="project-deep-heading">
-          <span class="project-deep-logo" aria-hidden="true">M<span class="iq">IQ</span></span>
+          <span class="project-deep-logo" aria-hidden="true">
+            <span class="project-deep-logo-type">M<span class="iq">IQ</span></span>
+            <span class="project-deep-logo-chart"><i></i><i></i><i></i></span>
+          </span>
           <span>
             <span class="project-deep-title">More about MeridianIQ</span>
             <span class="project-deep-status">Independent portfolio intelligence project · in development</span>
