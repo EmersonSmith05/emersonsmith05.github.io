@@ -136,6 +136,9 @@
   .xp-title{flex:1;min-width:0}
   .xp-title h3{font-family:var(--serif);font-size:1.14rem;letter-spacing:.1px;color:var(--navy)}
   .xp-title .role{color:var(--accent);font-weight:600;font-size:.9rem;margin-top:1px}
+  .steward-subbrand{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:9px;max-width:230px}
+  .steward-subbrand::before{content:"";width:56px;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#e0b85d)}
+  .steward-subbrand img{display:block;width:230px;max-width:100%;height:auto}
   .xp-meta{text-align:right;color:var(--muted);font-size:.83rem;white-space:nowrap;line-height:1.5}
   .xp-meta .dates{font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
   .caret{flex:0 0 auto;margin-left:6px;color:#9aa7bd;transition:transform .28s}
@@ -345,12 +348,15 @@
     <!-- Steward Partners -->
     <div class="xp reveal" id="xp-steward">
       <button class="xp-head" type="button" aria-expanded="false" aria-controls="xp-steward-body" onclick="toggleXp(this)">
-        <div class="logo" style="background:#12263f">
-          <svg viewBox="0 0 56 56" width="56" height="56"><rect width="56" height="56" fill="#12263f"/><text x="28" y="27" font-family="Georgia,serif" font-size="15" letter-spacing="1" fill="#ffffff" text-anchor="middle" font-weight="bold">SP</text><rect x="14" y="33" width="28" height="1" fill="#c9a44c"/><text x="28" y="43" font-family="Georgia,serif" font-size="6.2" letter-spacing="1.6" fill="#c9a44c" text-anchor="middle">G2G</text></svg>
+        <div class="logo steward-logo" style="background:#fff">
+          <img src="assets/steward-partners.png" alt="">
         </div>
         <div class="xp-title">
-          <h3>Steward Partners — G2G Wealth Management</h3>
+          <h3>Steward Partners</h3>
           <div class="role">Wealth Management Intern</div>
+          <div class="steward-subbrand">
+            <img src="assets/g2g-wealth-management.png" alt="G2G Wealth Management at Steward Partners">
+          </div>
         </div>
         <div class="xp-meta"><div class="dates">June – July 2026</div><div>Kennesaw, GA</div></div>
         <svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
