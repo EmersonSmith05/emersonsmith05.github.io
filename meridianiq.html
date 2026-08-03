@@ -142,8 +142,14 @@ th.num{text-align:right}
 .tab.active{color:var(--brand);border-bottom-color:var(--accent)}
 .inline-form{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:14px}
 .inline-form select,.inline-form input{padding:8px 10px;border:1px solid var(--line);border-radius:var(--r1);font-size:13.5px;font-family:inherit;background:var(--surface)}
+.inline-form .control{display:flex;flex-direction:column;gap:5px;min-width:210px}
+.inline-form .control label{font-size:11.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
 .stress-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:14px}
 .stress-card{margin-top:16px;border:1px solid var(--line);border-radius:var(--r2);padding:18px;background:var(--surface)}
+.selection-summary{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.selection-summary .context{font-size:12.5px;color:var(--muted)}
+.watchlist-add{padding:16px;border:1px solid var(--line);border-radius:var(--r2);background:var(--surface-2);margin-bottom:16px}
+.watchlist-add .inline-form{margin-bottom:0}
 .workflow-card{border:1px solid var(--accent);border-radius:var(--r2);padding:18px;margin-top:16px;background:var(--surface-2)}
 .total-ok{color:var(--pos)} .total-off{color:var(--neg)}
 .toast-stack{position:fixed;bottom:18px;right:18px;display:flex;flex-direction:column;gap:8px;z-index:99}
@@ -563,6 +569,95 @@ function runScreen(announce){
   if(announce) toast("Screen re-run on imported metrics (demo)");
 }
 
+/* ================= stress testing & watchlist state ================= */
+const STRESS_SCENARIOS = [
+  {id:"gfc", n:"Global Financial Crisis", p:"2007-10 → 2009-03", s:-57},
+  {id:"dotcom", n:"Dot-Com Bust", p:"2000-03 → 2002-10", s:-49},
+  {id:"covid", n:"COVID Crash", p:"2020-02 → 2020-03", s:-34},
+  {id:"rates", n:"Rate-Driven Bear Market", p:"2022-01 → 2022-10", s:-25},
+  {id:"correction", n:"Standard Correction", p:"Hypothetical", s:-10},
+];
+const INCOME_WEIGHTS = {JPM:10,JNJ:12,XOM:10,PG:12,KO:12,UNH:8,HON:8,NEE:10,PLD:8};
+const STRESS_PORTFOLIOS = {
+  core:{name:"Core Equity Model",holdings:HOLDINGS},
+  income:{name:"Income & Ballast",holdings:Object.entries(INCOME_WEIGHTS).map(([ticker,w])=>({...stockByTicker(ticker),w}))},
+};
+function runStress(announce){
+  const portfolio=STRESS_PORTFOLIOS[document.getElementById("stressPortfolio").value];
+  const scenario=STRESS_SCENARIOS.find(s=>s.id===document.getElementById("stressScenario").value);
+  const holdings=portfolio.holdings;
+  const securityWeight=holdings.reduce((sum,h)=>sum+h.w,0);
+  const covered=holdings.filter(h=>Number.isFinite(h.beta));
+  const coveredWeight=covered.reduce((sum,h)=>sum+h.w,0);
+  const weightedBeta=covered.reduce((sum,h)=>sum+h.beta*h.w,0)/100;
+  const estimate=weightedBeta*scenario.s;
+  const coverage=securityWeight?coveredWeight/securityWeight*100:0;
+  const ranked=[...covered].sort((a,b)=>a.beta*scenario.s-b.beta*scenario.s);
+  const worst=ranked.slice(0,4),best=ranked.slice(-4).reverse();
+  const mini=list=>list.map(h=>`<tr><td><b>${h.t}</b></td><td class="num">${h.w.toFixed(1)}%</td><td class="num">${h.beta.toFixed(2)}</td><td class="num ${cls(h.beta*scenario.s)}">${fmtPct(h.beta*scenario.s,1)}</td></tr>`).join("");
+  const secMap={};
+  covered.forEach(h=>{(secMap[h.sec]=secMap[h.sec]||{w:0,r:0});secMap[h.sec].w+=h.w;secMap[h.sec].r+=h.w*h.beta*scenario.s;});
+  const sectors=Object.entries(secMap).sort((a,b)=>a[1].r/a[1].w-b[1].r/b[1].w).slice(0,5)
+    .map(([sector,v])=>`<tr><td>${sector}</td><td class="num">${v.w.toFixed(1)}%</td><td class="num ${cls(v.r/v.w)}">${fmtPct(v.r/v.w,1)}</td></tr>`).join("");
+  document.getElementById("stressResults").innerHTML=`<div class="stress-card">
+    <div class="selection-summary">
+      <div><b style="font-size:16px;color:var(--heading)">${scenario.n}</b> <span class="badge badge-gray">${scenario.p}</span> <span class="badge badge-amber">ESTIMATE</span></div>
+      <div class="context">${portfolio.name} · ${holdings.length} positions · ${(100-securityWeight).toFixed(1)}% cash</div>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><div class="metric-label">Est. Portfolio Return</div><div class="metric-value ${cls(estimate)}">${fmtPct(estimate,1)}</div></div>
+      <div class="metric"><div class="metric-label">Assumed Market Shock</div><div class="metric-value">${scenario.s}%</div></div>
+      <div class="metric"><div class="metric-label">Portfolio Beta</div><div class="metric-value">${weightedBeta.toFixed(2)}</div></div>
+      <div class="metric"><div class="metric-label">Risk-Input Coverage</div><div class="metric-value">${coverage.toFixed(0)}%</div></div>
+    </div>
+    <div class="stress-cols">
+      <div><div class="chart-title">Worst holdings</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Beta</th><th class="num">Est.</th></tr></thead><tbody>${mini(worst)}</tbody></table></div>
+      <div><div class="chart-title">Best holdings</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Beta</th><th class="num">Est.</th></tr></thead><tbody>${mini(best)}</tbody></table></div>
+      <div><div class="chart-title">Sector impacts</div><table class="data"><thead><tr><th>Sector</th><th class="num">Weight</th><th class="num">Est.</th></tr></thead><tbody>${sectors}</tbody></table></div>
+    </div>
+  </div>`;
+  if(announce) toast(`${scenario.n} run for ${portfolio.name} (demo)`);
+}
+
+const WATCHLIST_ITEMS = [
+  {t:"PEP",note:"Staples candidate — swap vs KO",px:171.20,asof:ASOF},
+  {t:"ABBV",note:"Health-care yield idea",px:186.05,asof:ASOF},
+  {t:"TSM",note:"Semis diversifier away from single-name NVDA risk",px:192.40,asof:ASOF},
+  {t:"WM",note:"Defensive compounder",px:228.66,asof:ASOF},
+];
+const escHtml=value=>String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[ch]));
+function watchlistRowsHtml(){
+  return WATCHLIST_ITEMS.map((item,index)=>`<tr>
+    <td><b>${escHtml(item.t)}</b></td><td>${escHtml(item.note)}</td>
+    <td class="num">${item.px==null?'<span class="na">—</span>':`$${item.px.toFixed(2)}`}</td>
+    <td>${item.px==null?'<span class="badge badge-gray">Not imported</span>':item.asof}</td>
+    <td><button class="btn-link danger" onclick="removeWatchlistTicker(${index})">Remove</button></td>
+  </tr>`).join("");
+}
+function renderWatchlist(){
+  const rows=document.getElementById("watchlistRows");
+  if(rows) rows.innerHTML=watchlistRowsHtml();
+  const count=document.getElementById("watchlistCount");
+  if(count) count.textContent=WATCHLIST_ITEMS.length;
+}
+function addWatchlistTicker(event){
+  event.preventDefault();
+  const input=document.getElementById("watchlistTicker");
+  const noteInput=document.getElementById("watchlistNote");
+  const ticker=input.value.trim().toUpperCase();
+  if(!/^[A-Z][A-Z.-]{0,7}$/.test(ticker)){toast("Enter one valid ticker symbol, such as AAPL");input.focus();return;}
+  if(WATCHLIST_ITEMS.some(item=>item.t===ticker)){toast(`${ticker} is already on Q3 candidates`);input.select();return;}
+  const imported=stockByTicker(ticker);
+  WATCHLIST_ITEMS.push({t:ticker,note:noteInput.value.trim()||"Added for review",px:imported?.px??null,asof:imported?ASOF:null});
+  input.value="";noteInput.value="";renderWatchlist();
+  toast(imported?`${ticker} added with imported pricing`:`${ticker} added — imported price is unavailable`);
+}
+function removeWatchlistTicker(index){
+  const [removed]=WATCHLIST_ITEMS.splice(index,1);
+  renderWatchlist();
+  toast(`${removed.t} removed from Q3 candidates`);
+}
+
 /* ================= firm app pages ================= */
 const PAGES = {
 
@@ -692,46 +787,23 @@ screener(){
 },
 
 stress(){
-  const scen=[
-    {n:"Global Financial Crisis", p:"2007-10 → 2009-03", s:-57},
-    {n:"Dot-Com Bust",            p:"2000-03 → 2002-10", s:-49},
-    {n:"COVID Crash",             p:"2020-02 → 2020-03", s:-34},
-    {n:"Rate-Driven Bear Market", p:"2022-01 → 2022-10", s:-25},
-    {n:"Correction",              p:"—",                 s:-10},
-  ];
-  const wBeta = HOLDINGS.reduce((s,h)=>s+h.beta*h.w,0)/100;
-  const cards=scen.map(sc=>{
-    const est=wBeta*sc.s;
-    const ranked=[...HOLDINGS].sort((a,b)=>a.beta*sc.s - b.beta*sc.s);
-    const worst=ranked.slice(0,4), best=ranked.slice(-4).reverse();
-    const mini=list=>list.map(h=>`<tr><td>${h.t}</td><td class="num">${h.w.toFixed(1)}%</td><td class="num">${h.beta.toFixed(2)}</td><td class="num ${cls(h.beta*sc.s)}">${fmtPct(h.beta*sc.s,1)}</td></tr>`).join("");
-    const secMap={}; HOLDINGS.forEach(h=>{ (secMap[h.sec]=secMap[h.sec]||{w:0,r:0}); secMap[h.sec].w+=h.w; secMap[h.sec].r+=h.w*h.beta*sc.s; });
-    const secs=Object.entries(secMap).sort((a,b)=>a[1].r/a[1].w-b[1].r/b[1].w).slice(0,5)
-      .map(([s2,v])=>`<tr><td>${s2}</td><td class="num">${v.w.toFixed(1)}%</td><td class="num ${cls(v.r/v.w)}">${fmtPct(v.r/v.w,1)}</td></tr>`).join("");
-    return `<div class="stress-card">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px"><b style="font-size:15px;color:var(--heading)">${sc.n}</b>
-        <span class="badge badge-gray">${sc.p}</span><span class="badge badge-amber">ESTIMATE</span></div>
-      <div class="metric-grid" style="margin-top:10px">
-        <div class="metric"><div class="metric-label">Est. Portfolio Return</div><div class="metric-value ${cls(est)}">${fmtPct(est,1)}</div></div>
-        <div class="metric"><div class="metric-label">Assumed Market Shock</div><div class="metric-value">${sc.s}%</div></div>
-        <div class="metric"><div class="metric-label">Coverage</div><div class="metric-value">100%</div></div>
-      </div>
-      <div class="stress-cols">
-        <div><div class="chart-title">Worst holdings</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Beta</th><th class="num">Est.</th></tr></thead><tbody>${mini(worst)}</tbody></table></div>
-        <div><div class="chart-title">Best holdings</div><table class="data"><thead><tr><th>Ticker</th><th class="num">Weight</th><th class="num">Beta</th><th class="num">Est.</th></tr></thead><tbody>${mini(best)}</tbody></table></div>
-        <div><div class="chart-title">Sector impacts</div><table class="data"><thead><tr><th>Sector</th><th class="num">Weight</th><th class="num">Est.</th></tr></thead><tbody>${secs}</tbody></table></div>
-      </div></div>`;
-  }).join("");
   return `
   <div class="page-title">Stress Tests</div>
-  <div class="page-sub">Estimate how the portfolio would behave under editable market scenarios, using your imported risk inputs.</div>
+  <div class="page-sub">Select one portfolio and one market scenario to estimate the impact using imported risk inputs.</div>
   <div class="card">
     <div class="tabs"><button class="tab active">Run</button><button class="tab" onclick="toast('Scenarios tab — editable name/period/shock (demo)')">Scenarios</button></div>
-    <div class="inline-form"><select><option>Core Equity Model</option></select>
-      <button class="btn-primary" onclick="toast('Stress estimates recomputed from imported betas (demo)')">Run stress tests</button>
-      <select><option>All scenarios (5)</option></select></div>
+    <div class="inline-form">
+      <div class="control"><label for="stressPortfolio">Portfolio</label><select id="stressPortfolio" onchange="runStress(false)">
+        <option value="core">Core Equity Model · 18 positions</option>
+        <option value="income">Income &amp; Ballast · 9 positions</option>
+      </select></div>
+      <div class="control"><label for="stressScenario">Scenario</label><select id="stressScenario" onchange="runStress(false)">
+        ${STRESS_SCENARIOS.map(s=>`<option value="${s.id}">${s.n} · ${s.s}%</option>`).join("")}
+      </select></div>
+      <button class="btn-primary" style="align-self:flex-end" onclick="runStress(true)">Run selected stress test</button>
+    </div>
     <div class="warn-banner">These are beta-based estimates against a hypothetical market shock — not predictions. Holdings without an imported beta are excluded and reduce coverage.</div>
-    ${cards}
+    <div id="stressResults"></div>
   </div>`;
 },
 
@@ -759,18 +831,25 @@ rebalance(){
 },
 
 watchlists(){
-  const items=[["PEP","Staples candidate — swap vs KO",171.20],["ABBV","Health-care yield idea",186.05],["TSM","Semis diversifier away from single-name NVDA risk",192.40],["WM","Defensive compounder",228.66]];
   return `
   <div class="page-title">Watchlists</div>
   <div class="page-sub">Working lists of securities. Prices shown come from this firm's imported data only.</div>
   <div class="card"><div class="section-title">Lists</div>
     <table class="data"><thead><tr><th>Name</th><th>Description</th><th class="num">Securities</th></tr></thead>
-    <tbody><tr style="font-weight:700"><td>Q3 candidates</td><td>Ideas under review for the August rebalance</td><td class="num">4</td></tr>
+    <tbody><tr style="font-weight:700"><td>Q3 candidates</td><td>Ideas under review for the August rebalance</td><td class="num" id="watchlistCount">${WATCHLIST_ITEMS.length}</td></tr>
     <tr><td>Dividend bench</td><td>Backup yield names</td><td class="num">6</td></tr></tbody></table>
   </div>
   <div class="card"><div class="section-title">Q3 candidates</div>
-    <table class="data"><thead><tr><th>Identifier</th><th>Note</th><th class="num">Latest Close</th><th>As of</th></tr></thead>
-    <tbody>${items.map(i=>`<tr><td><b>${i[0]}</b></td><td>${i[1]}</td><td class="num">$${i[2].toFixed(2)}</td><td>${ASOF}</td></tr>`).join("")}</tbody></table>
+    <div class="watchlist-add">
+      <form class="inline-form" onsubmit="addWatchlistTicker(event)">
+        <div class="control"><label for="watchlistTicker">Ticker symbol</label><input id="watchlistTicker" maxlength="8" autocomplete="off" placeholder="AAPL" aria-describedby="watchlistHelp"></div>
+        <div class="control" style="flex:1;min-width:240px"><label for="watchlistNote">Review note</label><input id="watchlistNote" maxlength="100" placeholder="Why this security is being considered"></div>
+        <button class="btn-primary" type="submit" style="align-self:flex-end">Add ticker</button>
+      </form>
+      <p id="watchlistHelp" style="font-size:12px;color:var(--muted);margin-top:9px">One ticker at a time. Symbols with imported demo data receive a current price; other valid symbols remain clearly marked as not imported.</p>
+    </div>
+    <div style="overflow-x:auto"><table class="data"><thead><tr><th>Identifier</th><th>Note</th><th class="num">Latest Close</th><th>As of</th><th></th></tr></thead>
+    <tbody id="watchlistRows">${watchlistRowsHtml()}</tbody></table></div>
     <div class="inline-form" style="margin-top:14px"><select><option>Compare against: Core Equity Model</option></select>
       <button class="btn-secondary" onclick="toast('Comparison scored with the firm rule set (demo)')">Compare</button></div>
   </div>`;
@@ -878,7 +957,12 @@ function proposeReb(){
     </div>`;
   toast("Preview generated — side-effect-free.");
 }
-function afterRender(page){ if(page==="rebalance") rebTotal(); if(page==="screener") runScreen(false); }
+function afterRender(page){
+  if(page==="rebalance") rebTotal();
+  if(page==="screener") runScreen(false);
+  if(page==="stress") runStress(false);
+  if(page==="watchlists") renderWatchlist();
+}
 
 /* ================= admin pages ================= */
 const ADMIN_PAGES = {
