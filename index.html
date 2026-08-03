@@ -654,11 +654,21 @@ const verifiedCredentials=[
     href:'assets/certificates/claude-101.pdf',
     action:'View ↗',
     analyticsEvent:'certificate_opened'
+  },
+  {
+    name:'Claude Code',
+    displayName:'Claude Code 101',
+    href:'assets/certificates/claude-code-101.pdf',
+    action:'View ↗',
+    analyticsEvent:'certificate_opened'
   }
 ];
 verifiedCredentials.forEach(credential=>{
   const cert=[...document.querySelectorAll('.cert')].find(item=>item.querySelector('b')?.textContent.trim()===credential.name);
   if(!cert) return;
+  const displayName=credential.displayName||credential.name;
+  const title=cert.querySelector('b');
+  if(title) title.textContent=displayName;
   const icon=cert.querySelector('.ico');
   const image=icon?.querySelector('img');
   if(credential.image&&icon) icon.removeAttribute('style');
@@ -677,9 +687,9 @@ verifiedCredentials.forEach(credential=>{
   link.href=credential.href;
   link.target='_blank';
   link.rel='noopener';
-  link.setAttribute('aria-label',`Verify ${credential.name} credential on Credly`);
+  link.setAttribute('aria-label',`${credential.action?'View':'Verify'} ${displayName} certificate`);
   link.dataset.analyticsEvent=credential.analyticsEvent||'credential_opened';
-  link.dataset.analyticsLabel=credential.name;
+  link.dataset.analyticsLabel=displayName;
   cert.replaceWith(link);
   link.appendChild(cert);
 });
