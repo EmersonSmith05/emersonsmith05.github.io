@@ -194,6 +194,9 @@
   .project-deep{margin-top:22px;background:linear-gradient(180deg,#fff,#f8fafc);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
   .project-deep summary{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:19px 22px;cursor:pointer;list-style:none}
   .project-deep summary::-webkit-details-marker{display:none}
+  .project-deep-heading{display:flex;align-items:center;gap:13px;min-width:0}
+  .project-deep-logo{display:flex;align-items:center;justify-content:center;flex:0 0 48px;width:48px;height:48px;border-radius:11px;background:#0f2136;color:#fff;font-size:17px;font-weight:750;letter-spacing:-.03em;box-shadow:0 5px 14px rgba(15,33,54,.18)}
+  .project-deep-logo .iq{color:#d3a54b}
   .project-deep-title{display:block;color:var(--navy);font-family:var(--serif);font-size:1.08rem;font-weight:700}
   .project-deep-status{display:block;margin-top:2px;color:var(--muted);font-size:.78rem;font-weight:600}
   .project-deep-toggle{display:flex;align-items:center;justify-content:center;flex:0 0 28px;width:28px;height:28px;border:1px solid var(--line);border-radius:50%;color:var(--accent);font-size:1.15rem;line-height:1;transition:transform .2s,background .2s}
@@ -205,7 +208,7 @@
   .project-deep-item h4{color:var(--gold);font-size:.69rem;font-weight:750;letter-spacing:.1em;text-transform:uppercase}
   .project-deep-item p{margin-top:6px;color:var(--ink-soft);font-size:.84rem;line-height:1.55}
   .project-deep-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
-  @media(max-width:760px){.project-deep-grid{grid-template-columns:1fr}.project-deep summary,.project-deep-body{padding-left:18px;padding-right:18px}}
+  @media(max-width:760px){.project-deep-grid{grid-template-columns:1fr}.project-deep summary,.project-deep-body{padding-left:18px;padding-right:18px}.project-deep-logo{flex-basis:42px;width:42px;height:42px;font-size:15px}}
 
   /* ---------- Education / skills ---------- */
   .two-col{display:grid;grid-template-columns:1.15fr .85fr;gap:20px}
@@ -521,9 +524,12 @@
 
     <details class="project-deep reveal">
       <summary data-analytics-event="project_details_opened" data-analytics-label="MeridianIQ details">
-        <span>
-          <span class="project-deep-title">More about MeridianIQ</span>
-          <span class="project-deep-status">Independent portfolio intelligence project · in development</span>
+        <span class="project-deep-heading">
+          <span class="project-deep-logo" aria-hidden="true">M<span class="iq">IQ</span></span>
+          <span>
+            <span class="project-deep-title">More about MeridianIQ</span>
+            <span class="project-deep-status">Independent portfolio intelligence project · in development</span>
+          </span>
         </span>
         <span class="project-deep-toggle" aria-hidden="true">+</span>
       </summary>
