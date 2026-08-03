@@ -133,12 +133,14 @@
   .logo{flex:0 0 56px;width:56px;height:56px;border-radius:11px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line-soft)}
   .logo img{width:100%;height:100%;object-fit:contain;display:block}
   .logo.pad img{width:78%;height:78%}
+  .logo.steward-logo{flex:0 0 68px;width:68px;height:68px;display:grid;grid-template-rows:40px 1px 11px;justify-items:center;gap:2px;padding:4px;background:#fff}
+  .steward-mark{position:relative;width:58px;height:40px;overflow:hidden}
+  .steward-mark img{position:absolute;top:-6px;left:50%;width:86px;height:86px;max-width:none;transform:translateX(-50%)}
+  .steward-divider{width:34px;height:1px;background:var(--gold)}
+  .logo.steward-logo .g2g-mark{width:58px;height:11px;object-fit:contain}
   .xp-title{flex:1;min-width:0}
   .xp-title h3{font-family:var(--serif);font-size:1.14rem;letter-spacing:.1px;color:var(--navy)}
   .xp-title .role{color:var(--accent);font-weight:600;font-size:.9rem;margin-top:1px}
-  .steward-subbrand{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:9px;max-width:230px}
-  .steward-subbrand::before{content:"";width:56px;height:2px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#e0b85d)}
-  .steward-subbrand img{display:block;width:230px;max-width:100%;height:auto}
   .xp-meta{text-align:right;color:var(--muted);font-size:.83rem;white-space:nowrap;line-height:1.5}
   .xp-meta .dates{font-weight:700;color:var(--ink-soft);font-variant-numeric:tabular-nums}
   .caret{flex:0 0 auto;margin-left:6px;color:#9aa7bd;transition:transform .28s}
@@ -161,6 +163,7 @@
     .xp-body-inner,.hint{padding-left:24px}
     .xp-head{display:grid;grid-template-columns:56px minmax(0,1fr) 20px;gap:7px 14px}
     .xp-head .logo{grid-column:1;grid-row:1 / 3}
+    #xp-steward .xp-head{grid-template-columns:68px minmax(0,1fr) 20px}
     .xp-title{grid-column:2;grid-row:1}
     .xp-meta{grid-column:2;grid-row:2;display:block;text-align:left;padding-left:0;white-space:normal}
     .caret{grid-column:3;grid-row:1 / 3;align-self:center;margin-left:0}
@@ -349,14 +352,13 @@
     <div class="xp reveal" id="xp-steward">
       <button class="xp-head" type="button" aria-expanded="false" aria-controls="xp-steward-body" onclick="toggleXp(this)">
         <div class="logo steward-logo" style="background:#fff">
-          <img src="assets/steward-partners.png" alt="">
+          <span class="steward-mark"><img src="assets/steward-partners.png" alt=""></span>
+          <span class="steward-divider" aria-hidden="true"></span>
+          <img class="g2g-mark" src="assets/g2g-wealth-management.png" alt="">
         </div>
         <div class="xp-title">
-          <h3>Steward Partners</h3>
+          <h3>Steward Partners — G2G Wealth Management</h3>
           <div class="role">Wealth Management Intern</div>
-          <div class="steward-subbrand">
-            <img src="assets/g2g-wealth-management.png" alt="G2G Wealth Management at Steward Partners">
-          </div>
         </div>
         <div class="xp-meta"><div class="dates">June – July 2026</div><div>Kennesaw, GA</div></div>
         <svg class="caret" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
