@@ -133,11 +133,12 @@
   .logo{flex:0 0 56px;width:56px;height:56px;border-radius:11px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:1px solid var(--line-soft)}
   .logo img{width:100%;height:100%;object-fit:contain;display:block}
   .logo.pad img{width:78%;height:78%}
-  .logo.steward-logo{flex:0 0 68px;width:68px;height:68px;display:grid;grid-template-rows:40px 1px 11px;justify-items:center;gap:2px;padding:4px;background:#fff}
-  .steward-mark{position:relative;width:58px;height:40px;overflow:hidden}
+  .logo.steward-logo{flex:0 0 68px;width:68px;height:68px;display:grid;grid-template-rows:39px 1px 15px;justify-items:center;gap:2px;padding:3px;background:#fff}
+  .steward-mark{position:relative;width:58px;height:39px;overflow:hidden}
   .steward-mark img{position:absolute;top:-6px;left:50%;width:86px;height:86px;max-width:none;transform:translateX(-50%)}
   .steward-divider{width:34px;height:1px;background:var(--gold)}
-  .logo.steward-logo .g2g-mark{width:58px;height:11px;object-fit:contain}
+  .g2g-crop{position:relative;width:26px;height:15px;overflow:hidden}
+  .logo.steward-logo .g2g-crop img{position:absolute;top:0;left:0;width:79px;height:15px;max-width:none;object-fit:fill}
   .xp-title{flex:1;min-width:0}
   .xp-title h3{font-family:var(--serif);font-size:1.14rem;letter-spacing:.1px;color:var(--navy)}
   .xp-title .role{color:var(--accent);font-weight:600;font-size:.9rem;margin-top:1px}
@@ -354,7 +355,7 @@
         <div class="logo steward-logo" style="background:#fff">
           <span class="steward-mark"><img src="assets/steward-partners.png" alt=""></span>
           <span class="steward-divider" aria-hidden="true"></span>
-          <img class="g2g-mark" src="assets/g2g-wealth-management.png" alt="">
+          <span class="g2g-crop"><img src="assets/g2g-wealth-management.png" alt=""></span>
         </div>
         <div class="xp-title">
           <h3>Steward Partners — G2G Wealth Management</h3>
