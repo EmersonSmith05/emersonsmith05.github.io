@@ -250,7 +250,7 @@
   .cert b{color:var(--ink)}
   .cert .by{margin-left:auto;font-size:.74rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
   .cert-link{display:block;color:inherit;text-decoration:none;border-radius:10px}
-  .cert-link .cert{padding-left:7px;padding-right:7px;border-bottom:1px solid var(--line-soft);border-radius:9px;transition:background .15s}
+  .cert-link .cert{padding-left:0;padding-right:0;border-bottom:1px solid var(--line-soft);border-radius:9px;transition:background .15s}
   .cert-link:hover .cert{background:var(--accent-soft)}
   .cert-linked .ico{width:30px;height:30px;flex-basis:30px;background:#fff;border:1px solid var(--line-soft)}
   .cert-linked .ico img{width:28px;height:28px;object-fit:contain;border-radius:6px}
@@ -648,6 +648,12 @@ const verifiedCredentials=[
     name:'Microsoft Excel Associate',
     href:'https://www.credly.com/badges/7ba004d2-aa30-473e-a50a-d14eb9f30927/linked_in_profile',
     image:'assets/excel-associate-badge.jpg'
+  },
+  {
+    name:'Claude 101',
+    href:'assets/certificates/claude-101.pdf',
+    action:'View ↗',
+    analyticsEvent:'certificate_opened'
   }
 ];
 verifiedCredentials.forEach(credential=>{
@@ -655,8 +661,8 @@ verifiedCredentials.forEach(credential=>{
   if(!cert) return;
   const icon=cert.querySelector('.ico');
   const image=icon?.querySelector('img');
-  if(icon) icon.removeAttribute('style');
-  if(image){
+  if(credential.image&&icon) icon.removeAttribute('style');
+  if(credential.image&&image){
     image.src=credential.image;
     image.alt='';
     image.loading='lazy';
@@ -665,14 +671,14 @@ verifiedCredentials.forEach(credential=>{
   }
   cert.classList.add('cert-linked');
   const issuer=cert.querySelector('.by');
-  if(issuer) issuer.textContent='Verify ↗';
+  if(issuer) issuer.textContent=credential.action||'Verify ↗';
   const link=document.createElement('a');
   link.className='cert-link';
   link.href=credential.href;
   link.target='_blank';
   link.rel='noopener';
   link.setAttribute('aria-label',`Verify ${credential.name} credential on Credly`);
-  link.dataset.analyticsEvent='credential_opened';
+  link.dataset.analyticsEvent=credential.analyticsEvent||'credential_opened';
   link.dataset.analyticsLabel=credential.name;
   cert.replaceWith(link);
   link.appendChild(cert);
