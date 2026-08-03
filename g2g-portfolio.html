@@ -115,6 +115,43 @@ table.data tfoot td{border-top:2px solid var(--line);font-weight:700;border-bott
 @keyframes tin{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
 input.wt{width:88px;text-align:right;padding:6px 8px;border:1px solid var(--line);border-radius:var(--r1);font-size:13.5px}
 .total-ok{color:var(--pos)} .total-off{color:var(--neg)}
+
+/* ---- product-finish pass ---- */
+#demoBar::before{content:"RECREATED DEMO";flex:0 0 auto;padding:3px 7px;border:1px solid rgba(212,185,107,.45);border-radius:999px;color:var(--gold-400);font-size:9.5px;font-weight:800;letter-spacing:.1em}
+.sidebar{box-shadow:12px 0 30px rgba(8,31,20,.08)}
+.sb-link{position:relative;transition:background .16s,color .16s,padding-left .16s}
+.sb-link::before{content:"";width:6px;height:6px;flex:0 0 6px;border:1px solid rgba(212,185,107,.55);border-radius:50%;transition:.16s}
+.sb-link:hover{padding-left:19px}
+.sb-link.active::before{background:var(--gold-400);box-shadow:0 0 0 4px rgba(212,185,107,.12)}
+.topbar{position:sticky;top:0;z-index:30;min-height:58px;box-shadow:0 5px 18px rgba(8,31,20,.05)}
+.system-status{display:inline-flex;align-items:center;gap:7px;margin-left:auto;padding:6px 10px;border:1px solid var(--line);border-radius:999px;background:var(--brand-50);color:var(--brand-700);font-size:11.5px;font-weight:700;white-space:nowrap}
+.system-status::before{content:"";width:7px;height:7px;border-radius:50%;background:#2f9e61;box-shadow:0 0 0 3px rgba(47,158,97,.14)}
+.topbar .out{margin-left:0}
+.content{max-width:none;padding:30px}
+.page-title{font-size:28px;letter-spacing:-.02em}
+.page-sub{margin-top:5px}
+.card{border-color:#d9e0dc;box-shadow:0 1px 2px rgba(8,31,20,.05),0 10px 28px rgba(8,31,20,.065)}
+.kpi{position:relative;overflow:hidden;padding:16px 18px;background:linear-gradient(145deg,#fff 62%,var(--brand-50));transition:transform .16s,box-shadow .16s}
+.kpi::after{content:"";position:absolute;right:-18px;bottom:-22px;width:72px;height:72px;border:1px solid rgba(194,161,77,.22);border-radius:50%;box-shadow:0 0 0 12px rgba(194,161,77,.05)}
+.kpi:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(8,31,20,.11)}
+.kpi .v{font-size:25px;letter-spacing:-.02em}
+.chart-block{background:linear-gradient(180deg,#fff,#f9fbf9)}
+table.data th{background:#f0f4f1;color:#52645a}
+table.data tbody tr{transition:background .12s}
+@media(max-width:900px){
+  .sb-link::before{display:none}
+  .sb-link:hover{padding-left:10px}
+  .system-status{display:none}
+  .content{padding:22px}
+}
+@media(max-width:560px){
+  #demoBar::before{display:none}
+  .content{padding:16px}
+  .page-title{font-size:24px}
+  .card{max-width:100%;overflow-x:auto}
+  .kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi{min-width:0;padding:13px}
+}
 </style>
 </head>
 <body>
@@ -147,6 +184,7 @@ input.wt{width:88px;text-align:right;padding:6px 8px;border:1px solid var(--line
   <div class="main">
     <div class="topbar">
       <div class="crumb">G2G Portfolio Intelligence&nbsp;/&nbsp;<b id="crumbPage">Dashboard</b></div>
+      <div class="system-status">Bloomberg feed simulated</div>
       <div class="out"><a class="btn2" style="text-decoration:none" href="index.html">Sign out</a></div>
     </div>
     <div class="content" id="content"></div>

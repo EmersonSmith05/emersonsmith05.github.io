@@ -405,14 +405,46 @@ footer{max-width:1280px;margin:0 auto;padding:0 22px 34px;color:var(--ink-3);fon
 .rep .matrix td.r{font-size:9.5px}
 .rep ul.rep-notes{margin:6px 0;padding-left:18px}
 .rep ul.rep-notes li{margin-bottom:4px}
+
+/* ---------- product-finish pass ---------- */
+#demoBar{background:linear-gradient(90deg,#173f7d,#245fae);color:#fff;font:600 13px "Segoe UI",system-ui,sans-serif;padding:8px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;box-shadow:0 4px 16px rgba(20,54,103,.18)}
+#demoBar a{color:#fff;text-decoration:none;font-weight:750;white-space:nowrap}
+#demoBar .demo-pill{padding:3px 7px;border:1px solid rgba(255,255,255,.42);border-radius:999px;font-size:9.5px;font-weight:800;letter-spacing:.1em}
+#demoBar .demo-note{opacity:.84;font-weight:400}
+#reloadDemoBtn{margin-left:auto;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.38);color:#fff;padding:5px 11px;border-radius:7px;cursor:pointer;font:650 12px "Segoe UI",sans-serif;transition:background .15s}
+#reloadDemoBtn:hover{background:rgba(255,255,255,.23)}
+header{box-shadow:0 5px 18px rgba(20,20,18,.08)}
+.stat{position:relative;overflow:hidden;box-shadow:0 5px 15px rgba(20,20,18,.045)}
+.stat::before{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,var(--accent),transparent 82%)}
+.stat.warn::before{background:linear-gradient(90deg,var(--warn),transparent 82%)}
+.stat.good::before{background:linear-gradient(90deg,var(--good),transparent 82%)}
+.toolbar{backdrop-filter:blur(12px);background:color-mix(in srgb,var(--surface) 94%,transparent)}
+.tablecard,.panel{box-shadow:0 1px 2px rgba(20,20,18,.05),0 10px 24px rgba(20,20,18,.055)}
+tbody tr{transition:background .12s}
+.panel h2{display:flex;align-items:center;gap:8px}
+.panel h2::before{content:"";width:4px;height:16px;border-radius:999px;background:var(--accent)}
+@media(max-width:620px){
+  #demoBar .demo-pill{display:none}
+  #reloadDemoBtn{margin-left:0}
+  header{flex-wrap:wrap;padding:10px 12px}
+  .header-spacer{display:none}
+  .title-block{flex:1;min-width:0}
+  .brand-eyebrow{font-size:9px;letter-spacing:.13em}
+  .logo img{height:32px}
+  .hbtn{padding:5px 9px}
+  .hbtn:first-of-type{margin-left:auto}
+  .statbar{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat{min-width:0}
+}
 </style>
 </head>
 <body>
 
-<div id="demoBar" style="background:#1b4fa0;color:#fff;font:600 13px 'Segoe UI',system-ui,sans-serif;padding:8px 16px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
-  <a href="index.html" style="color:#fff;text-decoration:none;font-weight:700;white-space:nowrap">&larr; Back to Emerson's resume</a>
-  <span style="opacity:.85;font-weight:400">Recreated demo of the statement-sorting workflow I built at Thor Construction &amp; Design — preloaded with a synthetic Amex statement. No real company data.</span>
-  <button id="reloadDemoBtn" style="margin-left:auto;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.4);color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font:600 12px 'Segoe UI',sans-serif">Reset demo data</button>
+<div id="demoBar">
+  <a href="index.html">&larr; Back to Emerson's resume</a>
+  <span class="demo-pill">RECREATED DEMO</span>
+  <span class="demo-note">Statement-sorting workflow built at Thor Construction &amp; Design — preloaded with a synthetic Amex statement. No real company data.</span>
+  <button id="reloadDemoBtn">Reset demo data</button>
 </div>
 
 <header>
